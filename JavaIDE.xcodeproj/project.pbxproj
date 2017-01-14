@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F6246D391DC7B1840066D3C7 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6246D381DC7B1840066D3C7 /* Parser.swift */; };
+		F697C02A1E22E17B001044F9 /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F697C0291E22E17B001044F9 /* Scanner.swift */; };
 		F6A705C11DBD108A0074E419 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A705C01DBD108A0074E419 /* AppDelegate.swift */; };
 		F6A705C31DBD108A0074E419 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A705C21DBD108A0074E419 /* FirstViewController.swift */; };
 		F6A705C51DBD108A0074E419 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A705C41DBD108A0074E419 /* SecondViewController.swift */; };
@@ -14,6 +16,7 @@
 		F6A705CA1DBD108A0074E419 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F6A705C91DBD108A0074E419 /* Assets.xcassets */; };
 		F6A705CD1DBD108A0074E419 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F6A705CB1DBD108A0074E419 /* LaunchScreen.storyboard */; };
 		F6A705D81DBD108A0074E419 /* JavaIDETests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A705D71DBD108A0074E419 /* JavaIDETests.swift */; };
+		F6BE07E71E29541A00EAC0F8 /* CodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6BE07E61E29541A00EAC0F8 /* CodeGenerator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -27,6 +30,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F6246D381DC7B1840066D3C7 /* Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
+		F697C0291E22E17B001044F9 /* Scanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scanner.swift; sourceTree = "<group>"; };
 		F6A705BD1DBD108A0074E419 /* JavaIDE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JavaIDE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6A705C01DBD108A0074E419 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F6A705C21DBD108A0074E419 /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
@@ -38,6 +43,7 @@
 		F6A705D31DBD108A0074E419 /* JavaIDETests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JavaIDETests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6A705D71DBD108A0074E419 /* JavaIDETests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JavaIDETests.swift; sourceTree = "<group>"; };
 		F6A705D91DBD108A0074E419 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F6BE07E61E29541A00EAC0F8 /* CodeGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeGenerator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +92,9 @@
 				F6A705C91DBD108A0074E419 /* Assets.xcassets */,
 				F6A705CB1DBD108A0074E419 /* LaunchScreen.storyboard */,
 				F6A705CE1DBD108A0074E419 /* Info.plist */,
+				F6246D381DC7B1840066D3C7 /* Parser.swift */,
+				F697C0291E22E17B001044F9 /* Scanner.swift */,
+				F6BE07E61E29541A00EAC0F8 /* CodeGenerator.swift */,
 			);
 			path = JavaIDE;
 			sourceTree = "<group>";
@@ -149,6 +158,7 @@
 				TargetAttributes = {
 					F6A705BC1DBD108A0074E419 = {
 						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = 97R8489G7Q;
 						ProvisioningStyle = Automatic;
 					};
 					F6A705D21DBD108A0074E419 = {
@@ -202,8 +212,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6BE07E71E29541A00EAC0F8 /* CodeGenerator.swift in Sources */,
+				F6246D391DC7B1840066D3C7 /* Parser.swift in Sources */,
 				F6A705C51DBD108A0074E419 /* SecondViewController.swift in Sources */,
 				F6A705C11DBD108A0074E419 /* AppDelegate.swift in Sources */,
+				F697C02A1E22E17B001044F9 /* Scanner.swift in Sources */,
 				F6A705C31DBD108A0074E419 /* FirstViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -343,6 +356,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 97R8489G7Q;
 				INFOPLIST_FILE = JavaIDE/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Tobias.JavaIDE;
@@ -355,6 +369,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 97R8489G7Q;
 				INFOPLIST_FILE = JavaIDE/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Tobias.JavaIDE;
@@ -410,6 +425,7 @@
 				F6A705DE1DBD108A0074E419 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F6A705DF1DBD108A0074E419 /* Build configuration list for PBXNativeTarget "JavaIDETests" */ = {
 			isa = XCConfigurationList;
@@ -418,6 +434,7 @@
 				F6A705E11DBD108A0074E419 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
