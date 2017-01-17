@@ -8,8 +8,11 @@
 
 import Foundation
 
+/// Possible types: String, Number, Datatype, LoopOrCondition, Scope, Static, Print, Ident, OpenBracket, CloseBracket, OpenCurly, CloseCurly, Semicolon,
+/// Assign, Eq, Lt, Gt, Leq, Geq, (Default)
 class Scanner {
     
+    /// [][0] : type, [][1] : value
     static var scanArray = [[String]]()
     
     
@@ -78,13 +81,26 @@ class Scanner {
         case ";":
             word = String(inputCharacters[0])
             type = "Semicolon"
-            
-        case "=", "<" :
-             //word = handleAssignOrCompare(input)
-             //print("assign")
-            word = String(inputCharacters[0])
-            type = "Assign" // for now!
-            
+        case "=", "!":
+            word = handleAssignOrCompare(input)
+            if(word == "=") {
+                type = "Assign"
+            } else if(word == "!="){
+                type = "Neq"
+            } else {
+                type = "Eq"
+            }
+        case "<", ">":
+            word = handleCompare(input)
+            if(word == "<") {
+                type = "Lt"
+            } else if(word == ">") {
+                type = "Gt"
+            } else if(word == ">=") {
+                type = "Geq"
+            } else {
+                type = "Leq"
+            }
         default:
             type = "Default"
             for i in input.characters {
@@ -176,6 +192,47 @@ class Scanner {
         
         return word
     }
+    
+    
+    static func handleAssignOrCompare(_ input : String) -> String {
+        var word = ""
+        
+        for (index, element) in input.characters.enumerated() {
+            if(index<=1) {
+                if(element == "=") {
+                    word.append(element)
+                } else {
+                    break
+                }
+            } else {
+                break
+            }
+        }
+        
+        return word
+    }
+    
+    
+    static func handleCompare(_ input : String) -> String {
+        var word = ""
+        
+        for (index, element) in input.characters.enumerated() {
+            if(index == 0) {
+                word.append(element)
+            } else if(index == 1) {
+                if(element == "=") {
+                    word.append(element)
+                } else {
+                    break
+                }
+            } else {
+                break
+            }
+        }
+        
+        return word
+    }
+
     
     /*
      static func handlePrint (_ input : String) -> String {

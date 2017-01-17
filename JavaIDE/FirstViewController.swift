@@ -40,11 +40,11 @@ class FirstViewController: UIViewController, UITextViewDelegate {
     //MARK: Actions
 
     @IBAction func run(_ sender: UIButton) {
-        let inputArray = Scanner.scanInput(inputTextView.text)
-        let parseArray = Parser.parseInput(inputArray)
+        let scanArray = Scanner.scanInput(inputTextView.text)
+        let parseArray = Parser.parseInput(scanArray)
         
         var inputString = ""
-        for input in inputArray {
+        for input in scanArray {
             inputString.append(input[0])
         }
         //inputString = inputArray.description

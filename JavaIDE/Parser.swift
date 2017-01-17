@@ -8,11 +8,12 @@
 
 import Foundation
 
+
+/// Possible types: Declaration, DeclarationAndAssignment, Assignment, Functioncall, Print(?), Condition(?), Loop(?), Function(?), (Class and Instantiation)
 class Parser {
     
     static var parseArray = [[[String]]]()
     static var index = 0
-    //static var syntax : [[String]] = [["Datatype", "Ident", ";"], ["Datatype", "Ident", "=", "Ident"]]
     
     static func parseInput(_ scanArray : [[String]]) -> [[[String]]] {
         parseArray.removeAll()
