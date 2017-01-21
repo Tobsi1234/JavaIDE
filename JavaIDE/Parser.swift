@@ -17,7 +17,7 @@ class Parser {
     
     static func parseInput(_ scanArray : [[String]]) -> [[[String]]] {
         parseArray.removeAll()
-        index = 0
+        index = 0 // used in getType() to remove parsed input
         
         var newScanArray = getType(scanArray)
         
@@ -40,9 +40,11 @@ class Parser {
         
             switch(scanArray[0][0]) {
             case "Datatype":
-                typeArray = handleDeclaration(scanArray) // Missing e.g.: String i, j, k; Am besten mit Funktion falls Komma kommt: handleMultipleDeclarations (Array) -> ? ... Wandelt in besser verarbeitbaren Inhalt um. Beachte auch: int i, j = 5; --> int i = 5; int j = 5;
+                typeArray = handleDeclaration(scanArray) // Missing e.g.: String i, j, k; Am besten mit Funktion falls Komma kommt: handleMultipleDeclarations (Array) -> ? ... Wandelt in besser verarbeitbaren Inhalt um. Beachte auch: int i, j = 5; --> int i = 5; int j = 5; Beachte auch: i += 1
             case "Ident":
                 typeArray = handleAssignOrFunctioncall(scanArray)
+            case "LoopOrCondition":
+                typeArray = handleLoopOrCondition(scanArray)
             default:
                 typeArray = [[""]]
                 index = 1
@@ -148,7 +150,7 @@ class Parser {
                         print("Error: An close bracket is expected.")
                     }
                 } else {
-                    print("Error: An semicolon or a Bracket is expected after the identifier.")
+                    print("Error: An semicolon or a Bracket is expected after the identifier: \(input[0][1]).")
                 }
             } else {
                 print("Error: An semicolon or a Bracket is expected after the identifier.")
@@ -157,6 +159,76 @@ class Parser {
         }
         return typeArray
     }
+    
+    static func handleLoopOrCondition(_ input : [[String]]) -> [[String]] {
+        index = 0
+        var newIndex = 0
+        var newInput = input
+        var typeArray = [[String]]()
+        typeArray.append(["LoopOrConditionError"])
+        if(input[0][0] == "LoopOrCondition") {
+            typeArray.append(input[0])
+            index += 1; newIndex += 1
+            newInput.remove(at: 0)
+            if(input.indices.contains(1) && input[1][0] == "OpenBracket") {
+                typeArray.append(input[1])
+                index += 1; newIndex += 1
+                newInput.remove(at: 0)
+                if(input.indices.contains(2) && input[2][0] == "CloseBracket") { // ToDo: Expression
+                    typeArray.append(input[2])
+                    index += 1; newIndex += 1
+                    newInput.remove(at: 0)
+                    if(input.indices.contains(3) && input[3][0] == "OpenCurly") {
+                        typeArray.append(input[3])
+                        index += 1; newIndex += 1
+                        newInput.remove(at: 0)
+                        while(newInput.indices.contains(0) && newInput[0][0] != "CloseCurly") {
+                            switch(newInput[0][0]) {
+                            case "Datatype":
+                                typeArray += handleDeclaration(newInput)
+                            case "Ident":
+                                typeArray += handleAssignOrFunctioncall(newInput)
+                            case "LoopOrCondition":
+                                typeArray += handleInnerLoopOrCondition(newInput)
+                            default:
+                                typeArray = [[""]]
+                                index += 1
+                            }
+                            for _ in 0..<index {
+                                newInput.remove(at: 0)
+                            }
+                            newIndex += index
+                            index = newIndex
+                        }
+                        if(newInput.indices.contains(0) && newInput[0][0] == "CloseCurly") {
+                            typeArray.append(newInput[0])
+                            index += 1; newIndex += 1
+                            newInput.remove(at: 0)
+                            typeArray[0] = ["LoopOrCondition"]
+                        } else {
+                            print("Error: Close Bracket is expected after: \(input[3][1]).")
+                        }
+                    } else {
+                        print("Error: Open Bracket is expected after: \(input[2][1]).")
+                    }
+                } else {
+                    print("Error: Close Bracket is expected after: \(input[1][1]).")
+                }
+            } else {
+                print("Error: Open Bracket is expected after: \(input[0][1]).")
+            }
+        }
+        return typeArray
+    }
+    
+    static func handleInnerLoopOrCondition(_ input : [[String]]) -> [[String]] {
+        var newInput = input
+        var typeArray = [[String]]()
         
         
+        return typeArray
+    }
+    
 }
+
+

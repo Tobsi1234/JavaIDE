@@ -9,7 +9,7 @@
 import Foundation
 
 /// Possible types: String, Number, Datatype, LoopOrCondition, Scope, Static, Print, Ident, OpenBracket, CloseBracket, OpenCurly, CloseCurly, Semicolon,
-/// Assign, Eq, Lt, Gt, Leq, Geq, (Default)
+/// Assign, PlusAssign, Eq, Lt, Gt, Leq, Geq, Minus, Plus, (Dot), (Default) Missing: And, Or
 class Scanner {
     
     /// [][0] : type, [][1] : value
@@ -44,9 +44,19 @@ class Scanner {
             type = "String"
             word = handleString(input)
         //print("String : " + word)
-        case "0"..."9", "-", "+":
-            type = "Number"
-            word = handleNumber(input)
+        case "0"..."9", "-", "+", ".":
+            word = handleNumberOrOperator(input)
+            if(word == "-") {
+                type = "Minus"
+            } else if(word == "+"){
+                type = "Plus"
+            } else if(word == "+="){
+                type = "PlusAssign"
+            } else if(word == "."){
+                type = "Dot" // ToDo: Should be an error!
+            } else {
+                type = "Number"
+            }
         //print("Zahl : " + word)
         case "a"..."z", "A"..."Z":
             word = handleWord(input)
@@ -147,11 +157,19 @@ class Scanner {
     }
     
     
-    static func handleNumber (_ input : String) -> String {
+    static func handleNumberOrOperator (_ input : String) -> String {
         var word = ""
         var inputString = input
         var inputCharacters = Array(inputString.characters)
-        if( inputCharacters[0] == "+" || inputCharacters[0] == "-") {
+        if(inputCharacters[0] == "+") {
+            word.append(inputCharacters[0])
+            inputString.remove(at: inputString.startIndex)
+            if(inputCharacters[1] == "=") { // now 0, before it was [1]!
+                word.append(inputCharacters[1])
+                inputString.remove(at: inputString.startIndex)
+                return word
+            }
+        } else if(inputCharacters[0] == "-") {
             word.append(inputCharacters[0])
             inputString.remove(at: inputString.startIndex)
         }
