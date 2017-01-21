@@ -42,6 +42,7 @@ class FirstViewController: UIViewController, UITextViewDelegate {
     @IBAction func run(_ sender: UIButton) {
         let scanArray = Scanner.scanInput(inputTextView.text)
         let parseArray = Parser.parseInput(scanArray)
+        CodeGenerator.generateCode(parseArray)
         
         var inputString = ""
         for input in scanArray {
