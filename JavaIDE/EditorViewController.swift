@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FirstViewController: UIViewController, UITextViewDelegate {
+class EditorViewController: UIViewController, UITextViewDelegate {
     
     //MARK: Properties
     @IBOutlet weak var inputTextView: UITextView!
@@ -21,7 +21,7 @@ class FirstViewController: UIViewController, UITextViewDelegate {
         inputTextView.delegate = self
         
         //Looks for single or multiple taps.
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(FirstViewController.dismissKeyboard))
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(EditorViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
     }
     
