@@ -8,10 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		F6246D391DC7B1840066D3C7 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6246D381DC7B1840066D3C7 /* Parser.swift */; };
+		F63039811E37B8280054A58E /* JavaClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63039801E37B8280054A58E /* JavaClass.swift */; };
+		F63039831E37BAB70054A58E /* DataModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63039821E37BAB70054A58E /* DataModelTests.swift */; };
+		F63039851E37D6A30054A58E /* JavaClassTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63039841E37D6A30054A58E /* JavaClassTableViewCell.swift */; };
+		F63039871E3911B30054A58E /* JavaClassTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63039861E3911B30054A58E /* JavaClassTableViewController.swift */; };
 		F697C02A1E22E17B001044F9 /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F697C0291E22E17B001044F9 /* Scanner.swift */; };
 		F6A705C11DBD108A0074E419 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A705C01DBD108A0074E419 /* AppDelegate.swift */; };
-		F6A705C31DBD108A0074E419 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A705C21DBD108A0074E419 /* FirstViewController.swift */; };
-		F6A705C51DBD108A0074E419 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A705C41DBD108A0074E419 /* SecondViewController.swift */; };
+		F6A705C31DBD108A0074E419 /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A705C21DBD108A0074E419 /* EditorViewController.swift */; };
+		F6A705C51DBD108A0074E419 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A705C41DBD108A0074E419 /* SettingsViewController.swift */; };
 		F6A705C81DBD108A0074E419 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F6A705C61DBD108A0074E419 /* Main.storyboard */; };
 		F6A705CA1DBD108A0074E419 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F6A705C91DBD108A0074E419 /* Assets.xcassets */; };
 		F6A705CD1DBD108A0074E419 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F6A705CB1DBD108A0074E419 /* LaunchScreen.storyboard */; };
@@ -31,11 +35,15 @@
 
 /* Begin PBXFileReference section */
 		F6246D381DC7B1840066D3C7 /* Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
+		F63039801E37B8280054A58E /* JavaClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JavaClass.swift; sourceTree = "<group>"; };
+		F63039821E37BAB70054A58E /* DataModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataModelTests.swift; sourceTree = "<group>"; };
+		F63039841E37D6A30054A58E /* JavaClassTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JavaClassTableViewCell.swift; sourceTree = "<group>"; };
+		F63039861E3911B30054A58E /* JavaClassTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JavaClassTableViewController.swift; sourceTree = "<group>"; };
 		F697C0291E22E17B001044F9 /* Scanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scanner.swift; sourceTree = "<group>"; };
 		F6A705BD1DBD108A0074E419 /* JavaIDE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JavaIDE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6A705C01DBD108A0074E419 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		F6A705C21DBD108A0074E419 /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
-		F6A705C41DBD108A0074E419 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
+		F6A705C21DBD108A0074E419 /* EditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorViewController.swift; sourceTree = "<group>"; };
+		F6A705C41DBD108A0074E419 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		F6A705C71DBD108A0074E419 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F6A705C91DBD108A0074E419 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F6A705CC1DBD108A0074E419 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -86,15 +94,18 @@
 			isa = PBXGroup;
 			children = (
 				F6A705C01DBD108A0074E419 /* AppDelegate.swift */,
-				F6A705C21DBD108A0074E419 /* FirstViewController.swift */,
-				F6A705C41DBD108A0074E419 /* SecondViewController.swift */,
+				F6A705C21DBD108A0074E419 /* EditorViewController.swift */,
+				F6A705C41DBD108A0074E419 /* SettingsViewController.swift */,
 				F6A705C61DBD108A0074E419 /* Main.storyboard */,
 				F6A705C91DBD108A0074E419 /* Assets.xcassets */,
 				F6A705CB1DBD108A0074E419 /* LaunchScreen.storyboard */,
 				F6A705CE1DBD108A0074E419 /* Info.plist */,
-				F6246D381DC7B1840066D3C7 /* Parser.swift */,
 				F697C0291E22E17B001044F9 /* Scanner.swift */,
+				F6246D381DC7B1840066D3C7 /* Parser.swift */,
 				F6BE07E61E29541A00EAC0F8 /* CodeGenerator.swift */,
+				F63039801E37B8280054A58E /* JavaClass.swift */,
+				F63039841E37D6A30054A58E /* JavaClassTableViewCell.swift */,
+				F63039861E3911B30054A58E /* JavaClassTableViewController.swift */,
 			);
 			path = JavaIDE;
 			sourceTree = "<group>";
@@ -104,6 +115,7 @@
 			children = (
 				F6A705D91DBD108A0074E419 /* Info.plist */,
 				F6F8873F1E2E86070007A79E /* ScannerTests.swift */,
+				F63039821E37BAB70054A58E /* DataModelTests.swift */,
 			);
 			path = JavaIDETests;
 			sourceTree = "<group>";
@@ -213,12 +225,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F63039811E37B8280054A58E /* JavaClass.swift in Sources */,
 				F6BE07E71E29541A00EAC0F8 /* CodeGenerator.swift in Sources */,
+				F63039851E37D6A30054A58E /* JavaClassTableViewCell.swift in Sources */,
 				F6246D391DC7B1840066D3C7 /* Parser.swift in Sources */,
-				F6A705C51DBD108A0074E419 /* SecondViewController.swift in Sources */,
+				F63039871E3911B30054A58E /* JavaClassTableViewController.swift in Sources */,
+				F6A705C51DBD108A0074E419 /* SettingsViewController.swift in Sources */,
 				F6A705C11DBD108A0074E419 /* AppDelegate.swift in Sources */,
 				F697C02A1E22E17B001044F9 /* Scanner.swift in Sources */,
-				F6A705C31DBD108A0074E419 /* FirstViewController.swift in Sources */,
+				F6A705C31DBD108A0074E419 /* EditorViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,6 +242,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F6F887401E2E86070007A79E /* ScannerTests.swift in Sources */,
+				F63039831E37BAB70054A58E /* DataModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

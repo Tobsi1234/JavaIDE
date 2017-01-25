@@ -45,6 +45,8 @@ class Parser {
                 typeArray = handleAssignOrFunctioncall(scanArray)
             case "LoopOrCondition":
                 typeArray = handleLoopOrCondition(scanArray)
+            case "Print":
+                typeArray = handlePrint(scanArray)
             default:
                 typeArray = [[""]]
                 index = 1
@@ -88,19 +90,19 @@ class Parser {
                                 index += 1
                                 typeArray[0] = ["DeclarationAndAssignment"]
                             } else {
-                                print("Error: An semicolon is expected.")
+                                Scanner.errorMsgs.append("Error: An semicolon is expected.")
                             }
                         } else {
-                            print("Error: An identifier, number or string is expected after the equals sign.")
+                            Scanner.errorMsgs.append("Error: An identifier, number or string is expected after the equals sign.")
                         }
                     } else {
-                        print("Error: An semicolon or equal-sign is expected after the identifier (varibale name).")
+                        Scanner.errorMsgs.append("Error: An semicolon or equal-sign is expected after the identifier (varibale name).")
                     }
                 } else {
-                    print("Error: An semicolon or equal-sign is expected after the identifier (varibale name).")
+                    Scanner.errorMsgs.append("Error: An semicolon or equal-sign is expected after the identifier (varibale name).")
                 }
             } else {
-                print("Error: An identifier (variable name) is expected after the datatype.")
+                Scanner.errorMsgs.append("Error: An identifier (variable name) is expected after the datatype.")
             }
             
         }
@@ -128,10 +130,10 @@ class Parser {
                             index += 1
                             typeArray[0] = ["Assignment"]
                         } else {
-                            print("Error: An semicolon is expected.")
+                            Scanner.errorMsgs.append("Error: An semicolon is expected.")
                         }
                     } else {
-                        print("Error: An identifier, number or string is expected after the equals sign.")
+                        Scanner.errorMsgs.append("Error: An identifier, number or string is expected after the equals sign.")
                     }
                 } else if(input[1][0] == "OpenBracket") {
                     typeArray.append(input[1])
@@ -144,21 +146,64 @@ class Parser {
                             index += 1
                             typeArray[0] = ["Functioncall"]
                         } else {
-                            print("Error: An semicolon is expected.")
+                            Scanner.errorMsgs.append("Error: An semicolon is expected.")
                         }
                     } else {
-                        print("Error: An close bracket is expected.")
+                        Scanner.errorMsgs.append("Error: An close bracket is expected.")
                     }
                 } else {
-                    print("Error: An semicolon or a Bracket is expected after the identifier: \(input[0][1]).")
+                    Scanner.errorMsgs.append("Error: An semicolon or a Bracket is expected after the identifier: \(input[0][1]).")
                 }
             } else {
-                print("Error: An semicolon or a Bracket is expected after the identifier.")
+                Scanner.errorMsgs.append("Error: An semicolon or a Bracket is expected after the identifier.")
             }
             
         }
         return typeArray
     }
+    
+    
+    static func handlePrint (_ input : [[String]]) -> [[String]] {
+        index = 0
+        var typeArray = [[String]]()
+        typeArray.append(["PrintError"])
+        if(input[0][0] == "Print") {
+            typeArray.append(input[0])
+            index += 1
+            if(input.indices.contains(1) && input[1][0] == "OpenBracket"){
+                typeArray.append(input[1])
+                index += 1
+                if(input.indices.contains(2)) {
+                    if(input[2][0] == "Ident") {
+                        typeArray.append(input[2])
+                        index += 1
+                        if(input[3][0] == "CloseBracket") {
+                            typeArray.append(input[3])
+                            index += 1
+                            if(input[4][0] == "Semicolon") {
+                                typeArray.append(input[4])
+                                index += 1
+                                typeArray[0] = ["Print"]
+                            } else {
+                                Scanner.errorMsgs.append("Error: An semicolon is expected after close bracket.")
+                            }
+                        } else {
+                            Scanner.errorMsgs.append("Error: An close bracket is expected after \(input[2][1]).")
+                        }
+                    } else {
+                        Scanner.errorMsgs.append("Error: Missing Argument after open bracket.")
+                    }
+                } else {
+                    Scanner.errorMsgs.append("Error: Missing Argument after open bracket.")
+                }
+            } else {
+                Scanner.errorMsgs.append("Error: An open bracket is expected after System.out.println.")
+            }
+            
+        }
+        return typeArray
+    }
+    
     
     static func handleLoopOrCondition(_ input : [[String]]) -> [[String]] {
         index = 0
@@ -206,16 +251,16 @@ class Parser {
                             newInput.remove(at: 0)
                             typeArray[0] = ["LoopOrCondition"]
                         } else {
-                            print("Error: Close Bracket is expected after: \(input[3][1]).")
+                            Scanner.errorMsgs.append("Error: Close Bracket is expected after: \(input[3][1]).")
                         }
                     } else {
-                        print("Error: Open Bracket is expected after: \(input[2][1]).")
+                        Scanner.errorMsgs.append("Error: Open Bracket is expected after: \(input[2][1]).")
                     }
                 } else {
-                    print("Error: Close Bracket is expected after: \(input[1][1]).")
+                    Scanner.errorMsgs.append("Error: Close Bracket is expected after: \(input[1][1]).")
                 }
             } else {
-                print("Error: Open Bracket is expected after: \(input[0][1]).")
+                Scanner.errorMsgs.append("Error: Open Bracket is expected after: \(input[0][1]).")
             }
         }
         return typeArray

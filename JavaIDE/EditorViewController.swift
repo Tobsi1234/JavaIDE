@@ -44,6 +44,12 @@ class FirstViewController: UIViewController, UITextViewDelegate {
         let parseArray = Parser.parseInput(scanArray)
         CodeGenerator.generateCode(parseArray)
         
+        print("\nErrors: \n")
+        for msg in Scanner.errorMsgs {
+            print(msg)
+        }
+        print("\nEnd of Errors \n")
+        
         var inputString = ""
         for input in scanArray {
             inputString.append(input[0])

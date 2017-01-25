@@ -9,8 +9,10 @@
 import Foundation
 
 /// Possible types: String, Number, Datatype, LoopOrCondition, Scope, Static, Print, Ident, OpenBracket, CloseBracket, OpenCurly, CloseCurly, Semicolon,
-/// Assign, PlusAssign, Eq, Lt, Gt, Leq, Geq, Minus, Plus, (Dot), (Default) Missing: And, Or
+/// Assign, PlusAssign, Eq, Lt, Gt, Leq, Geq, Minus, Plus,  Multi, Div, (Dot), (Default) Missing: And, Or
 class Scanner {
+    
+    static var errorMsgs = [String]()
     
     /// [][0] : type, [][1] : value
     static var scanArray = [[String]]()
@@ -43,7 +45,6 @@ class Scanner {
         case "\"":
             type = "String"
             word = handleString(input)
-        //print("String : " + word)
         case "0"..."9", "-", "+", ".":
             word = handleNumberOrOperator(input)
             if(word == "-") {
@@ -57,7 +58,6 @@ class Scanner {
             } else {
                 type = "Number"
             }
-        //print("Zahl : " + word)
         case "a"..."z", "A"..."Z":
             word = handleWord(input)
             if (javaDatatypes.contains(word)) {
@@ -70,12 +70,15 @@ class Scanner {
                 type = "Static"
             } else if (word == "System.out.println") {
                 type = "Print"
-                //word = handlePrint(input)
             } else {
                 type = "Ident"
             }
-            
-        //print("ident oder Schlüsselwort")
+        case "*":
+            word = String(inputCharacters[0])
+            type = "Multi"
+        case "/":
+            word = String(inputCharacters[0])
+            type = "Div"
         case "(":
             word = String(inputCharacters[0])
             type = "OpenBracket"
@@ -110,6 +113,16 @@ class Scanner {
                 type = "Geq"
             } else {
                 type = "Leq"
+            }
+        case "&", "|":
+            word = handleAndOr(input)
+            if(word == "&&") {
+                type = "And"
+            } else if(word == "||") {
+                type = "Or"
+            } else {
+                type = "Error"
+                errorMsgs.append("Error: \(word) is not valid.")
             }
         default:
             type = "Default"
@@ -201,8 +214,8 @@ class Scanner {
                 word.append(element)
                 dotUsed = index
             } else {
-                if(element != " " && element != "=" && element != "," && element != ";" && element != "(") {
-                    print("Error: Invalid identifier")
+                if(element != " " && element != "=" && element != "," && element != ";" && element != "(" && element != ")") {
+                    errorMsgs.append("Error: Invalid identifier \(element)")
                 }
                 break
             }
@@ -252,28 +265,24 @@ class Scanner {
     }
 
     
-    /*
-     static func handlePrint (_ input : String) -> String {
-     var word = ""
-     
-     var inputString = input
-     
-     let index = inputString.index(inputString.startIndex, offsetBy: 19)
-     inputString = inputString.substring(from: index)
-     
-     // hier: Switch statement (String, +, Variable etc.)
-     for (_, element) in inputString.characters.enumerated() {
-     if(element != ")") {
-     word.append(element)
-     }
-     else {
-     break
-     }
-     }
-     word = "System.out.println(" + word + ")"
-     print (word)
-     return word
-     }
-     */
+    static func handleAndOr(_ input : String) -> String {
+        var word = ""
+        
+        for (index, element) in input.characters.enumerated() {
+            if(index == 0) {
+                word.append(element)
+            } else if(index == 1) {
+                if(element == "&" || element == "|") {
+                    word.append(element)
+                } else {
+                    break
+                }
+            } else {
+                break
+            }
+        }
+        
+        return word
+    }
     
 }
