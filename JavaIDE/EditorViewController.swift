@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import os.log
 
 class EditorViewController: UIViewController, UITextViewDelegate {
     
@@ -23,6 +24,14 @@ class EditorViewController: UIViewController, UITextViewDelegate {
         //Looks for single or multiple taps.
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(EditorViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
+        
+        // Adds a border to the UITextView
+        self.inputTextView.layer.borderWidth = 0.4
+        self.inputTextView.layer.borderColor = UIColor.black.cgColor
+        
+        // Adds a border to the UITextView
+        self.resultTextView.layer.borderWidth = 0.4
+        self.resultTextView.layer.borderColor = UIColor.black.cgColor
     }
     
     //Calls this function when the tap is recognized.
@@ -42,7 +51,7 @@ class EditorViewController: UIViewController, UITextViewDelegate {
     @IBAction func run(_ sender: UIButton) {
         let scanArray = Scanner.scanInput(inputTextView.text)
         let parseArray = Parser.parseInput(scanArray)
-        CodeGenerator.generateCode(parseArray)
+        OutputGenerator.generateOutput(parseArray)
         
         print("\nErrors: \n")
         for msg in Scanner.errorMsgs {

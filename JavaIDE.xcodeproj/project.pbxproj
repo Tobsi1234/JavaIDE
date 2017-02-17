@@ -19,7 +19,7 @@
 		F6A705C81DBD108A0074E419 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F6A705C61DBD108A0074E419 /* Main.storyboard */; };
 		F6A705CA1DBD108A0074E419 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F6A705C91DBD108A0074E419 /* Assets.xcassets */; };
 		F6A705CD1DBD108A0074E419 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F6A705CB1DBD108A0074E419 /* LaunchScreen.storyboard */; };
-		F6BE07E71E29541A00EAC0F8 /* CodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6BE07E61E29541A00EAC0F8 /* CodeGenerator.swift */; };
+		F6BE07E71E29541A00EAC0F8 /* OutputGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6BE07E61E29541A00EAC0F8 /* OutputGenerator.swift */; };
 		F6F887401E2E86070007A79E /* ScannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F8873F1E2E86070007A79E /* ScannerTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -50,7 +50,7 @@
 		F6A705CE1DBD108A0074E419 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F6A705D31DBD108A0074E419 /* JavaIDETests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JavaIDETests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6A705D91DBD108A0074E419 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F6BE07E61E29541A00EAC0F8 /* CodeGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeGenerator.swift; sourceTree = "<group>"; };
+		F6BE07E61E29541A00EAC0F8 /* OutputGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OutputGenerator.swift; sourceTree = "<group>"; };
 		F6F8873F1E2E86070007A79E /* ScannerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScannerTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -102,7 +102,7 @@
 				F6A705CE1DBD108A0074E419 /* Info.plist */,
 				F697C0291E22E17B001044F9 /* Scanner.swift */,
 				F6246D381DC7B1840066D3C7 /* Parser.swift */,
-				F6BE07E61E29541A00EAC0F8 /* CodeGenerator.swift */,
+				F6BE07E61E29541A00EAC0F8 /* OutputGenerator.swift */,
 				F63039801E37B8280054A58E /* JavaClass.swift */,
 				F63039841E37D6A30054A58E /* JavaClassTableViewCell.swift */,
 				F63039861E3911B30054A58E /* JavaClassTableViewController.swift */,
@@ -226,7 +226,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F63039811E37B8280054A58E /* JavaClass.swift in Sources */,
-				F6BE07E71E29541A00EAC0F8 /* CodeGenerator.swift in Sources */,
+				F6BE07E71E29541A00EAC0F8 /* OutputGenerator.swift in Sources */,
 				F63039851E37D6A30054A58E /* JavaClassTableViewCell.swift in Sources */,
 				F6246D391DC7B1840066D3C7 /* Parser.swift in Sources */,
 				F63039871E3911B30054A58E /* JavaClassTableViewController.swift in Sources */,

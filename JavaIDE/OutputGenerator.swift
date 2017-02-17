@@ -9,11 +9,11 @@
 import Foundation
 
 // Number: Check if number is integer or float... (remember: ".5" or "123." is float)
-class CodeGenerator {
+class OutputGenerator {
     
     static var varArray = [[String: Any]]()
     
-    static func generateCode(_ parseArray: [[[String]]]) {
+    static func generateOutput(_ parseArray: [[[String]]]) {
         varArray.removeAll()
 
         var newParseArray = parseArray
