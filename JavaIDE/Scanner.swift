@@ -41,104 +41,108 @@ class Scanner {
         let javaLoopsOrConditions : [String] = ["for", "while", "if", "else", "switch"]
         let javaScopes : [String] = ["private", "public", "protected"]
         var inputCharacters = Array(input.characters)
-        switch inputCharacters[0] {
-        case "\"":
-            type = "String"
-            word = handleString(input)
-        case "0"..."9", "-", "+", ".":
-            word = handleNumberOrOperator(input)
-            if(word == "-") {
-                type = "Minus"
-            } else if(word == "+"){
-                type = "Plus"
-            } else if(word == "+="){
-                type = "PlusAssign"
-            } else if(word == "."){
-                type = "Dot" // ToDo: Should be an error!
-            } else {
-                type = "Number"
-            }
-        case "a"..."z", "A"..."Z":
-            word = handleWord(input)
-            if (javaDatatypes.contains(word)) {
-                type = "Datatype"
-            } else if (javaLoopsOrConditions.contains(word)) {
-                type = "LoopOrCondition"
-            } else if (javaScopes.contains(word)) {
-                type = "Scope"
-            } else if (word == "static") {
-                type = "Static"
-            } else if (word == "System.out.println") {
-                type = "Print"
-            } else {
-                type = "Ident"
-            }
-        case "*":
-            word = String(inputCharacters[0])
-            type = "Multi"
-        case "/":
-            word = String(inputCharacters[0])
-            type = "Div"
-        case "(":
-            word = String(inputCharacters[0])
-            type = "OpenBracket"
-        case ")":
-            word = String(inputCharacters[0])
-            type = "CloseBracket"
-        case "{":
-            word = String(inputCharacters[0])
-            type = "OpenCurly"
-        case "}":
-            word = String(inputCharacters[0])
-            type = "CloseCurly"
-        case ";":
-            word = String(inputCharacters[0])
-            type = "Semicolon"
-        case "=", "!":
-            word = handleAssignOrCompare(input)
-            if(word == "=") {
-                type = "Assign"
-            } else if(word == "!="){
-                type = "Neq"
-            } else {
-                type = "Eq"
-            }
-        case "<", ">":
-            word = handleCompare(input)
-            if(word == "<") {
-                type = "Lt"
-            } else if(word == ">") {
-                type = "Gt"
-            } else if(word == ">=") {
-                type = "Geq"
-            } else {
-                type = "Leq"
-            }
-        case "&", "|":
-            word = handleAndOr(input)
-            if(word == "&&") {
-                type = "And"
-            } else if(word == "||") {
-                type = "Or"
-            } else {
-                type = "Error"
-                errorMsgs.append("Error: \(word) is not valid.")
-            }
-        default:
-            type = "Default"
-            for i in input.characters {
-                if(i != " ") {
-                    word.append(i)
+        if(inputCharacters.indices.contains(0)) {
+            switch inputCharacters[0] {
+            case "\"":
+                type = "String"
+                word = handleString(input)
+            case "0"..."9", "-", "+", ".":
+                word = handleNumberOrOperator(input)
+                if(word == "-") {
+                    type = "Minus"
+                } else if(word == "+"){
+                    type = "Plus"
+                } else if(word == "+="){
+                    type = "PlusAssign"
+                } else if(word == "."){
+                    type = "Dot" // ToDo: Should be an error!
                 } else {
-                    break
+                    type = "Number"
+                }
+            case "a"..."z", "A"..."Z":
+                word = handleWord(input)
+                if (javaDatatypes.contains(word)) {
+                    type = "Datatype"
+                } else if (javaLoopsOrConditions.contains(word)) {
+                    type = "LoopOrCondition"
+                } else if (javaScopes.contains(word)) {
+                    type = "Scope"
+                } else if (word == "static") {
+                    type = "Static"
+                } else if (word == "System.out.println") {
+                    type = "Print"
+                } else {
+                    type = "Ident"
+                }
+            case "*":
+                word = String(inputCharacters[0])
+                type = "Multi"
+            case "/":
+                word = String(inputCharacters[0])
+                type = "Div"
+            case "(":
+                word = String(inputCharacters[0])
+                type = "OpenBracket"
+            case ")":
+                word = String(inputCharacters[0])
+                type = "CloseBracket"
+            case "{":
+                word = String(inputCharacters[0])
+                type = "OpenCurly"
+            case "}":
+                word = String(inputCharacters[0])
+                type = "CloseCurly"
+            case ";":
+                word = String(inputCharacters[0])
+                type = "Semicolon"
+            case "=", "!":
+                word = handleAssignOrCompare(input)
+                if(word == "=") {
+                    type = "Assign"
+                } else if(word == "!="){
+                    type = "Neq"
+                } else {
+                    type = "Eq"
+                }
+            case "<", ">":
+                word = handleCompare(input)
+                if(word == "<") {
+                    type = "Lt"
+                } else if(word == ">") {
+                    type = "Gt"
+                } else if(word == ">=") {
+                    type = "Geq"
+                } else {
+                    type = "Leq"
+                }
+            case "&", "|":
+                word = handleAndOr(input)
+                if(word == "&&") {
+                    type = "And"
+                } else if(word == "||") {
+                    type = "Or"
+                } else {
+                    type = "Error"
+                    errorMsgs.append("Error: \(word) is not valid.")
+                }
+            default:
+                type = "Default"
+                for i in input.characters {
+                    if(i != " ") {
+                        word.append(i)
+                    } else {
+                        break
+                    }
                 }
             }
-        }
-        
-        scanArray.append([type, word])
-        if(type == "String") {
-            word = "\"" + word + "\"" // for ScanInput method, to compare word with rest input correctly
-        }
+            
+            scanArray.append([type, word])
+            if(type == "String") {
+                word = "\"" + word + "\"" // for ScanInput method, to compare word with rest input correctly
+            }
+        } else {
+                errorMsgs.append("Error: No input.")
+            }
         return word
     }
     

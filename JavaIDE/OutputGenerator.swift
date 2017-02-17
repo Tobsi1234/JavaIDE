@@ -18,17 +18,22 @@ class OutputGenerator {
 
         var newParseArray = parseArray
         while(newParseArray.indices.contains(0)) {
-            switch(newParseArray[0][0][0]) {
-            case "Declaration":
-                handleDeclaration(newParseArray[0])
-            case "DeclarationAndAssignment":
-                handleDeclarationAndAssignment(newParseArray[0])
-            case "Print":
-                handlePrint(newParseArray[0])
-            default:
-                print("Default (CodeGenerator)")
+            if(newParseArray[0].indices.contains(0)) {
+                switch(newParseArray[0][0][0]) {
+                case "Declaration":
+                    handleDeclaration(newParseArray[0])
+                case "DeclarationAndAssignment":
+                    handleDeclarationAndAssignment(newParseArray[0])
+                case "Print":
+                    handlePrint(newParseArray[0])
+                default:
+                    print("Default (CodeGenerator)")
+                }
+                newParseArray.remove(at: 0)
+            } else {
+                Scanner.errorMsgs.append("Error: No input.")
+                break
             }
-            newParseArray.remove(at: 0)
         }
     }
     
@@ -38,7 +43,7 @@ class OutputGenerator {
         let ident : String = parseArray[2][1]
         //let value : String = parseArray[4][1]
         var isIn = false
-        print(ident)
+        //print(ident)
         if(varArray.indices.contains(0)) {
             for variable in varArray[0] {
                 if(variable.key == ident) {
