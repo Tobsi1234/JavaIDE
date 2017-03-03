@@ -8,8 +8,8 @@
 
 import Foundation
 
-/// Possible types: String, Number, Datatype, LoopOrCondition, Scope, Static, Print, Ident, OpenBracket, CloseBracket, OpenCurly, CloseCurly, Semicolon,
-/// Assign, PlusAssign, Eq, Lt, Gt, Leq, Geq, Minus, Plus,  Multi, Div, (Dot), (Default) Missing: And, Or
+/// Possible types: String, Number, Datatype, LoopOrCondition, Scope, Static, Void, Print, Ident, OpenBracket, CloseBracket, OpenCurly, CloseCurly, OpenSquare, CloseSquare, Semicolon, Comma
+/// Assign, PlusAssign, Eq, Lt, Gt, Leq, Geq, Minus, Plus,  Multi, Div, (Dot), (Default) Missing: And, Or, Boolean (true, false)
 class Scanner {
     
     static var errorMsgs = [String]()
@@ -69,6 +69,8 @@ class Scanner {
                     type = "Scope"
                 } else if (word == "static") {
                     type = "Static"
+                } else if (word == "void") {
+                    type = "Void"
                 } else if (word == "System.out.println") {
                     type = "Print"
                 } else {
@@ -92,9 +94,18 @@ class Scanner {
             case "}":
                 word = String(inputCharacters[0])
                 type = "CloseCurly"
+            case "[":
+                word = String(inputCharacters[0])
+                type = "OpenSquare"
+            case "]":
+                word = String(inputCharacters[0])
+                type = "CloseSquare"
             case ";":
                 word = String(inputCharacters[0])
                 type = "Semicolon"
+            case ",":
+                word = String(inputCharacters[0])
+                type = "Comma"
             case "=", "!":
                 word = handleAssignOrCompare(input)
                 if(word == "=") {
@@ -138,7 +149,7 @@ class Scanner {
             
             scanArray.append([type, word])
             if(type == "String") {
-                word = "\"" + word + "\"" // for ScanInput method, to compare word with rest input correctly
+                word = "\"" + word + "\"" // for ScanInput method, to compare word with rest input correctly. Problem: what if invalid string (when input ends like this: ..."_ without the second quotation mark
             }
         } else {
                 errorMsgs.append("Error: No input.")
@@ -168,8 +179,6 @@ class Scanner {
                 }
             }
         }
-        
-        
         return word
     }
     
@@ -218,7 +227,7 @@ class Scanner {
                 word.append(element)
                 dotUsed = index
             } else {
-                if(element != " " && element != "=" && element != "," && element != ";" && element != "(" && element != ")") {
+                if(element != " " && element != "=" && element != "," && element != ";" && element != "(" && element != ")" && element != "[" && element != "]") {
                     errorMsgs.append("Error: Invalid identifier \(element)")
                 }
                 break

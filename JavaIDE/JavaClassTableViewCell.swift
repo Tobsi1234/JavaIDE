@@ -13,7 +13,7 @@ class JavaClassTableViewCell: UITableViewCell {
     //MARK: Properties
     
     @IBOutlet weak var nameLabel: UILabel!
-    
+    var content = ""
     
     override func awakeFromNib() {
         super.awakeFromNib()

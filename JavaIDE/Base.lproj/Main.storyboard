@@ -9,7 +9,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Test-->
+        <!--New Class-->
         <scene sceneID="hNz-n2-bh7">
             <objects>
                 <viewController id="9pv-A4-QxB" customClass="EditorViewController" customModule="JavaIDE" customModuleProvider="target" sceneMemberID="viewController">
@@ -30,27 +30,13 @@
                                     <action selector="run:" destination="9pv-A4-QxB" eventType="touchUpInside" id="bvl-nG-R5d"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="}" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9gm-lc-zw0">
-                                <rect key="frame" x="16" y="399" width="7" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="int i; j = 5; if() {i = 1;}  String i = 5; int k = 11; System.out.println(k);" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="doa-xC-eaI">
-                                <rect key="frame" x="14" y="107" width="343" height="284"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="doa-xC-eaI">
+                                <rect key="frame" x="14" y="72" width="343" height="356"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                             </textView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="public static void main(String[] args) { " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Xw-nj-S3I">
-                                <rect key="frame" x="16" y="78" width="293" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" text="..." textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="gHv-1s-QWk">
                                 <rect key="frame" x="14" y="468" width="343" height="142"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -62,6 +48,7 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Test" image="first" id="acW-dT-cKf"/>
+                    <navigationItem key="navigationItem" title="New Class" id="CM5-fW-tst"/>
                     <connections>
                         <outlet property="inputTextView" destination="doa-xC-eaI" id="Ipq-wg-pfY"/>
                         <outlet property="resultTextView" destination="gHv-1s-QWk" id="5fW-Q6-0Xj"/>
@@ -209,7 +196,6 @@
                     <connections>
                         <segue destination="5zS-cL-ooe" kind="relationship" relationship="viewControllers" id="SsK-dd-UOG"/>
                         <segue destination="8rJ-Kc-sve" kind="relationship" relationship="viewControllers" id="lzU-1b-eKA"/>
-                        <segue destination="9pv-A4-QxB" kind="relationship" relationship="viewControllers" id="ETt-yx-g6H"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
@@ -242,7 +228,4 @@
         <image name="javaIcon" width="128" height="128"/>
         <image name="settingsIcon" width="22" height="22"/>
     </resources>
-    <inferredMetricsTieBreakers>
-        <segue reference="ehA-8t-JB8"/>
-    </inferredMetricsTieBreakers>
 </document>

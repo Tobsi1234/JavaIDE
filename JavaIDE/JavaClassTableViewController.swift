@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import os.log
 
 class JavaClassTableViewController: UITableViewController {
 
@@ -20,15 +21,19 @@ class JavaClassTableViewController: UITableViewController {
     
     private func loadSampleClasses() {
         
-        guard let class1 = JavaClass(name: "Example 1", content: "int i = 0;") else {
+        guard let class1 = JavaClass(name: "Example 1", content: "public static void main(String[] args) {\n int i = 5;\n System.out.println(i);\n}") else {
             fatalError("Unable to instantiate class1")
         }
         
-        guard let class2 = JavaClass(name: "Example 2", content: "String abc = \"Test\";") else {
+        guard let class2 = JavaClass(name: "Example 2", content: "public static void main(String[] args) {\n  int i = 5;\n  while(i == 5) {\n    String abc = \"Test\";\n    System.out.println(abc);\n  }\n}") else {
             fatalError("Unable to instantiate class2")
         }
         
-        classes += [class1, class2]
+        guard let class3 = JavaClass(name: "Example 3", content: "public static void main(String[] args) {\n int i = 5;\n System.out.println(i);\ntest1();\n}\n\npublic static void test1(String arg1, int arg2) {\n int j = 5;\n System.out.println(j);\n}") else {
+            fatalError("Unable to instantiate class3")
+        }
+        
+        classes += [class1, class2, class3]
     }
     
     
@@ -68,6 +73,7 @@ class JavaClassTableViewController: UITableViewController {
         let javaClass = classes[indexPath.row]
         
         cell.nameLabel.text = javaClass.name
+        cell.content = javaClass.content
         
         return cell
     }
@@ -108,14 +114,58 @@ class JavaClassTableViewController: UITableViewController {
     }
     */
 
-    /*
-    // MARK: - Navigation
-
+    //MARK: Actions
+    
+    @IBAction func unwindToJavaClassList(sender: UIStoryboardSegue) {
+        if let sourceViewController = sender.source as? EditorViewController, let javaClass = sourceViewController.javaClass {
+            
+            if let selectedIndexPath = tableView.indexPathForSelectedRow {
+                // Update an existing meal.
+                classes[selectedIndexPath.row] = javaClass
+                tableView.reloadRows(at: [selectedIndexPath], with: .none)
+            }
+            else { //notUsed
+                // Add a new meal.
+                let newIndexPath = IndexPath(row: classes.count, section: 0)
+                
+                classes.append(javaClass)
+                tableView.insertRows(at: [newIndexPath], with: .automatic)
+            }
+        }
+    }
+    
+    
+    //MARK: - Navigation
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        
+        super.prepare(for: segue, sender: sender)
+        
+        switch(segue.identifier ?? "") {
+            
+        //case "AddItem":
+            //os_log("Adding a new meal.", log: OSLog.default, type: .debug)
+            
+        case "ShowDetail":
+            guard let javaClassDetailViewController = segue.destination as? EditorViewController else {
+                fatalError("Unexpected destination: \(segue.destination)")
+            }
+            
+            guard let selectedJavaClassCell = sender as? JavaClassTableViewCell else {
+                fatalError("Unexpected sender: \(sender)")
+            }
+            
+            guard let indexPath = tableView.indexPath(for: selectedJavaClassCell) else {
+                fatalError("The selected cell is not being displayed by the table")
+            }
+            
+            let selectedJavaClass = classes[indexPath.row]
+            javaClassDetailViewController.javaClass = selectedJavaClass
+            
+        default:
+            fatalError("Unexpected Segue Identifier; \(segue.identifier)")
+        }
     }
-    */
 
 }
