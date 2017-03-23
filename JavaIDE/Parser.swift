@@ -351,10 +351,10 @@ class Parser {
                     if(input[2][0] == "Ident") { // ToDo: More options possible
                         typeArray.append(input[2])
                         index += 1
-                        if(input[3][0] == "CloseBracket") {
+                        if(input.indices.contains(3) && input[3][0] == "CloseBracket") {
                             typeArray.append(input[3])
                             index += 1
-                            if(input[4][0] == "Semicolon") {
+                            if(input.indices.contains(4) && input[4][0] == "Semicolon") {
                                 typeArray.append(input[4])
                                 index += 1
                                 typeArray[0] = ["Print"]
