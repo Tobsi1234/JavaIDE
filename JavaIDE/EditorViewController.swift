@@ -83,12 +83,18 @@ class EditorViewController: UIViewController, UITextViewDelegate {
     //MARK: Actions
 
     @IBAction func run(_ sender: UIButton) {
+        dismissKeyboard()
         Scanner.errorMsgs.removeAll()
         let scanArray = Scanner.scanInput(inputTextView.text)
-        let parseArray = Parser.parseInput(scanArray)
         if(Scanner.errorMsgs.isEmpty) {
-            OutputGenerator.generateOutput(parseArray)
+            let parseArray = Parser.parseInput(scanArray)
+            print("\nParser: \n \(parseArray.description)\nEnd of Parser \n")
+
+            if(Scanner.errorMsgs.isEmpty) {
+                OutputGenerator.generateOutput(parseArray)
+            }
         }
+        
         
         print("\nErrors: \n")
         for msg in Scanner.errorMsgs {
@@ -97,12 +103,23 @@ class EditorViewController: UIViewController, UITextViewDelegate {
         print("\nEnd of Errors \n")
         
         var inputString = ""
-        for input in scanArray {
-            inputString.append(input[0])
-        }
+
         //inputString = scanArray.description
         //print(scanArray.description)
-        inputString = parseArray.description
+        //inputString = parseArray.description
+        if(Scanner.errorMsgs.isEmpty) {
+            for outputMsg in OutputGenerator.outputMsgs {
+                inputString.append(outputMsg)
+                inputString.append("\n")
+            }
+        } else {
+            for errorMsg in Scanner.errorMsgs {
+                inputString.append(errorMsg)
+                inputString.append("\n")
+            }
+        }
+        
+        //inputString = OutputGenerator.outputMsgs.description
         resultTextView.text = inputString
     }
 

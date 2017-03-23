@@ -30,6 +30,7 @@ class Parser {
         return parseArray
     }
     
+    
     // ToDo: Save functionnames with arguments in extra object/array for OutputGenerator
     
     static func handleFunction(_ input : [[String]]) -> [[String]] {
@@ -264,16 +265,16 @@ class Parser {
                                 index += 1
                                 typeArray[0] = ["DeclarationAndAssignment"]
                             } else {
-                                Scanner.errorMsgs.append("Error: An semicolon is expected.")
+                                Scanner.errorMsgs.append("Error: A semicolon is expected.")
                             }
                         } else {
                             Scanner.errorMsgs.append("Error: An identifier, number or string is expected after the equals sign.")
                         }
                     } else {
-                        Scanner.errorMsgs.append("Error: An semicolon or equal-sign is expected after the identifier: \(input[1][1]).")
+                        Scanner.errorMsgs.append("Error: A semicolon or equal-sign is expected after the identifier: \(input[1][1]).")
                     }
                 } else {
-                    Scanner.errorMsgs.append("Error: An semicolon or equal-sign is expected after the identifier: \(input[1][1]).")
+                    Scanner.errorMsgs.append("Error: A semicolon or equal-sign is expected after the identifier: \(input[1][1]).")
                 }
             } else {
                 Scanner.errorMsgs.append("Error: An identifier (variable name) is expected after the datatype.")
@@ -303,7 +304,7 @@ class Parser {
                             index += 1
                             typeArray[0] = ["Assignment"]
                         } else {
-                            Scanner.errorMsgs.append("Error: An semicolon is expected.")
+                            Scanner.errorMsgs.append("Error: A semicolon is expected.")
                         }
                     } else {
                         Scanner.errorMsgs.append("Error: An identifier, number or string is expected after the equals sign.")
@@ -319,16 +320,16 @@ class Parser {
                             index += 1
                             typeArray[0] = ["Functioncall"]
                         } else {
-                            Scanner.errorMsgs.append("Error: An semicolon is expected.")
+                            Scanner.errorMsgs.append("Error: A semicolon is expected.")
                         }
                     } else {
-                        Scanner.errorMsgs.append("Error: An close bracket is expected.")
+                        Scanner.errorMsgs.append("Error: A close bracket is expected.")
                     }
                 } else {
-                    Scanner.errorMsgs.append("Error: An semicolon or a Bracket is expected after the identifier: \(input[0][1]).")
+                    Scanner.errorMsgs.append("Error: A semicolon or a Bracket is expected after the identifier: \(input[0][1]).")
                 }
             } else {
-                Scanner.errorMsgs.append("Error: An semicolon or a Bracket is expected after the identifier.")
+                Scanner.errorMsgs.append("Error: A semicolon or a Bracket is expected after the identifier.")
             }
             
         }
@@ -358,10 +359,10 @@ class Parser {
                                 index += 1
                                 typeArray[0] = ["Print"]
                             } else {
-                                Scanner.errorMsgs.append("Error: An semicolon is expected after close bracket.")
+                                Scanner.errorMsgs.append("Error: A semicolon is expected after close bracket.")
                             }
                         } else {
-                            Scanner.errorMsgs.append("Error: An close bracket is expected after \(input[2][1]).")
+                            Scanner.errorMsgs.append("Error: A close bracket is expected after \(input[2][1]).")
                         }
                     } else {
                         Scanner.errorMsgs.append("Error: Missing Argument after open bracket.")
@@ -379,6 +380,8 @@ class Parser {
     
     
     // Beachte das zwischen CurlyKlammern wieder types stehen. Daher Rekursion/Schleife. In Array z.B.: ...,["OpenCurly", "{"], ["DeclarationAndAssignment"], ["Datatype", "String"],...
+    // ToDo: handle InnerLoopOrCondition
+    // ToDo: ELSE
     static func handleLoopOrCondition(_ input : [[String]]) -> [[String]] {
         index = 0
         var newIndex = 0
@@ -389,15 +392,15 @@ class Parser {
             typeArray.append(input[0])
             index += 1; newIndex += 1
             newInput.remove(at: 0)
-            if(input.indices.contains(1) && input[1][0] == "OpenBracket") {
+            if(input.indices.contains(1) && input[1][0] == "OpenBracket") { // ToDo: check if "for-loop", because it works different
                 typeArray.append(input[1])
                 index += 1; newIndex += 1
                 newInput.remove(at: 0)
-                if(input.indices.contains(index) && (input[index][0] == "Ident" || input[index][0] == "Number")) { // ToDo: More Expressions (use while loop)
+                if(input.indices.contains(index) && (input[index][0] == "Ident" || input[index][0] == "Number")) { // ToDo: String!
                     typeArray.append(input[index])
                     index += 1; newIndex += 1
                     newInput.remove(at: 0)
-                    if(input.indices.contains(index) && (input[index][0] == "Eq" || input[index][0] == "Lt" || input[index][0] == "Gt" || input[index][0] == "Leq" || input[index][0] == "Geq")) { // ToDo: More Expressions (use while loop)
+                    if(input.indices.contains(index) && (input[index][0] == "Eq" || input[index][0] == "Neq" || input[index][0] == "Lt" || input[index][0] == "Gt" || input[index][0] == "Leq" || input[index][0] == "Geq")) {
                         typeArray.append(input[index])
                         index += 1; newIndex += 1
                         newInput.remove(at: 0)
@@ -406,55 +409,89 @@ class Parser {
                             index += 1; newIndex += 1
                             newInput.remove(at: 0)
                             
-                            if(input.indices.contains(index) && input[index][0] == "CloseBracket") { // ToDo: Expression
-                                typeArray.append(input[index])
-                                index += 1; newIndex += 1
-                                newInput.remove(at: 0)
-                                if(input.indices.contains(index) && input[index][0] == "OpenCurly") {
+                            while(input.indices.contains(index) && input[index][0] != "CloseBracket") { // Parse Multiple Conditions
+                                if(input.indices.contains(index) && (input[index][0] == "And" || input[index][0] == "Or")) {
                                     typeArray.append(input[index])
                                     index += 1; newIndex += 1
                                     newInput.remove(at: 0)
-                                    while(newInput.indices.contains(0) && newInput[0][0] != "CloseCurly") {
-                                        switch(newInput[0][0]) {
-                                        case "Scope":
-                                            typeArray += handleFunction(newInput)
-                                        case "Datatype":
-                                            typeArray += handleDeclaration(newInput)
-                                        case "Ident":
-                                            typeArray += handleAssignOrFunctioncall(newInput)
-                                        case "Print":
-                                            typeArray += handlePrint(newInput)
-                                        case "LoopOrCondition":
-                                            typeArray += handleInnerLoopOrCondition(newInput)
-                                        default:
-                                            typeArray = [[""]]
-                                            index += 1
-                                        }
-                                        for _ in 0..<index {
-                                            newInput.remove(at: 0)
-                                        }
-                                        newIndex += index
-                                        index = newIndex
-                                    }
-                                    if(newInput.indices.contains(0) && newInput[0][0] == "CloseCurly") {
-                                        typeArray.append(newInput[0])
+                                    if(input.indices.contains(index) && (input[index][0] == "Ident" || input[index][0] == "Number")) {
+                                        typeArray.append(input[index])
                                         index += 1; newIndex += 1
                                         newInput.remove(at: 0)
-                                        typeArray[0] = ["LoopOrCondition"]
+                                        if(input.indices.contains(index) && (input[index][0] == "Eq" || input[index][0] == "Neq" || input[index][0] == "Lt" || input[index][0] == "Gt" || input[index][0] == "Leq" || input[index][0] == "Geq")) {
+                                            typeArray.append(input[index])
+                                            index += 1; newIndex += 1
+                                            newInput.remove(at: 0)
+                                            if(input.indices.contains(index) && (input[index][0] == "Ident" || input[index][0] == "Number")) {
+                                                typeArray.append(input[index])
+                                                index += 1; newIndex += 1
+                                                newInput.remove(at: 0)
+                                            } else {
+                                                Scanner.errorMsgs.append("Error: A ident or number is expected after: \(input[index-1][1]) in the \(input[0][1]) - expression/loop.")
+                                            }
+                                        } else {
+                                            Scanner.errorMsgs.append("Error: A comparison operator is expected after: \(input[index-1][1]) in the \(input[0][1]) - expression/loop.")
+                                        }
                                     } else {
-                                        Scanner.errorMsgs.append("Error: Close curly bracket is expected after the \(input[0][1]) - expression/loop.")
+                                        Scanner.errorMsgs.append("Error: A ident or number is expected after: \(input[index-1][1]) in the \(input[0][1]) - expression/loop.")
                                     }
                                 } else {
-                                    Scanner.errorMsgs.append("Error: Open curly bracket is expected after: \(input[index-1][1]) in the \(input[0][1]) - expression/loop.")
+                                    Scanner.errorMsgs.append("Error: A '&&' or '||' is expected after: \(input[index-1][1]) in the \(input[0][1]) - expression/loop.")
+                                    break
                                 }
-                            } else {
-                                Scanner.errorMsgs.append("Error: Close bracket is expected after: \(input[index-1][1]) in the \(input[0][1]) - expression/loop.")
+                            }
+                            if(Scanner.errorMsgs.isEmpty) {
+                                if(input.indices.contains(index) && input[index][0] == "CloseBracket") {
+                                    typeArray.append(input[index])
+                                    index += 1; newIndex += 1
+                                    newInput.remove(at: 0)
+                                    if(input.indices.contains(index) && input[index][0] == "OpenCurly") {
+                                        typeArray.append(input[index])
+                                        index += 1; newIndex += 1
+                                        newInput.remove(at: 0)
+                                        while(newInput.indices.contains(0) && newInput[0][0] != "CloseCurly" && Scanner.errorMsgs.isEmpty) {
+                                            switch(newInput[0][0]) {
+                                            case "Scope":
+                                                typeArray += handleFunction(newInput)
+                                            case "Datatype":
+                                                typeArray += handleDeclaration(newInput)
+                                            case "Ident":
+                                                typeArray += handleAssignOrFunctioncall(newInput)
+                                            case "Print":
+                                                typeArray += handlePrint(newInput)
+                                            case "LoopOrCondition":
+                                                typeArray += handleInnerLoopOrCondition(newInput)
+                                            default:
+                                                typeArray += [[""]]
+                                                index = 1
+                                                Scanner.errorMsgs.append("Error: \(newInput[0][1]) is not known.")
+                                            }
+                                            for _ in 0..<index {
+                                                newInput.remove(at: 0)
+                                            }
+                                            newIndex += index
+                                            index = newIndex
+                                        }
+                                        if(newInput.indices.contains(0) && newInput[0][0] == "CloseCurly") {
+                                            typeArray.append(newInput[0])
+                                            index += 1; newIndex += 1
+                                            newInput.remove(at: 0)
+                                            typeArray[0] = ["LoopOrCondition"] // ToDo: handle else
+                                        } else {
+                                            Scanner.errorMsgs.append("Error: Close curly bracket is expected after the \(input[0][1]) - expression/loop.")
+                                        }
+                                    } else {
+                                        Scanner.errorMsgs.append("Error: Open curly bracket is expected after: \(input[index-1][1]) in the \(input[0][1]) - expression/loop.")
+                                    }
+                                } else {
+                                    Scanner.errorMsgs.append("Error: Close bracket is expected after: \(input[index-1][1]) in the \(input[0][1]) - expression/loop.")
+                                }
                             }
                         } else {
                             Scanner.errorMsgs.append("Error: A ident or number is expected after: \(input[index-1][1]) in the \(input[0][1]) - expression/loop.")
                         }
                     } else {
-                        Scanner.errorMsgs.append("Error: A comparison operator after: \(input[index-1][1]) in the \(input[0][1]) - expression/loop.")
+                        Scanner.errorMsgs.append("Error: A comparison operator is expected after: \(input[index-1][1]) in the \(input[0][1]) - expression/loop.")
                     }
                 } else {
                     Scanner.errorMsgs.append("Error: A ident or number is expected after: \(input[index-1][1]) in the \(input[0][1]) - expression/loop.")

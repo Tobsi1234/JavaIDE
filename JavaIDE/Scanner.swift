@@ -8,8 +8,8 @@
 
 import Foundation
 
-/// Possible types: String, Number, Datatype, LoopOrCondition, Scope, Static, Void, Print, Ident, OpenBracket, CloseBracket, OpenCurly, CloseCurly, OpenSquare, CloseSquare, Semicolon, Comma
-/// Assign, PlusAssign, Eq, Lt, Gt, Leq, Geq, Minus, Plus,  Multi, Div, (Dot), (Default) Missing: And, Or, Boolean (true, false)
+/// Possible types: String, Number, Datatype, LoopOrCondition, Else, Scope, Static, Void, Print, Ident, OpenBracket, CloseBracket, OpenCurly, CloseCurly, OpenSquare, CloseSquare, Semicolon, Comma
+/// Assign, PlusAssign, Eq, Neq, Lt, Gt, Leq, Geq, Minus, Plus,  Multi, Div, And, Or, (Dot), (Default) Missing: Boolean (true, false), Switch, break
 class Scanner {
     
     static var errorMsgs = [String]()
@@ -17,13 +17,16 @@ class Scanner {
     /// [][0] : type, [][1] : value
     static var scanArray = [[String]]()
     
+    static let javaDatatypes : [String] = ["String", "int", "double"]
+    static let javaLoopsOrConditions : [String] = ["for", "while", "if"] // ToDo: Switch
+    static let javaScopes : [String] = ["private", "public", "protected"]
     
     static func scanInput(_ input : String) -> [[String]] {
         scanArray.removeAll()
         var word = getNextWord(input)
         var newInput = input
         
-        while(newInput.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) != word) { //wenn newInput (also Rest-String) == word dann ist word wohl das letzte.
+        while(newInput.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) != word && errorMsgs.isEmpty) { //wenn newInput (also Rest-String) == word dann ist word wohl das letzte.
             let index = newInput.index(newInput.startIndex, offsetBy: word.characters.count)
             newInput = newInput.substring(from: index).trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
             word = getNextWord(newInput)
@@ -37,9 +40,6 @@ class Scanner {
     static func getNextWord(_ input : String) -> String {
         var type = ""
         var word = ""
-        let javaDatatypes : [String] = ["String", "int", "double"]
-        let javaLoopsOrConditions : [String] = ["for", "while", "if", "else", "switch"]
-        let javaScopes : [String] = ["private", "public", "protected"]
         var inputCharacters = Array(input.characters)
         if(inputCharacters.indices.contains(0)) {
             switch inputCharacters[0] {
@@ -55,7 +55,8 @@ class Scanner {
                 } else if(word == "+="){
                     type = "PlusAssign"
                 } else if(word == "."){
-                    type = "Dot" // ToDo: Should be an error!
+                    type = "Error"
+                    errorMsgs.append("Error: '.' is not valid here.")
                 } else {
                     type = "Number"
                 }
@@ -73,6 +74,8 @@ class Scanner {
                     type = "Void"
                 } else if (word == "System.out.println") {
                     type = "Print"
+                } else if (word == "else") {
+                    type = "Else"
                 } else {
                     type = "Ident"
                 }
@@ -160,6 +163,7 @@ class Scanner {
     
     static func handleString (_ input : String) -> String {
         var word = ""
+        var stringIsValid = false
         //word.append("\"")
         var positionOfSlash = -2 // dazu da, um \" zu erkennen. Problem bei \\" erkennt es ebenfalls \", obwohl hierbei das Backslash maskiert wird.
         for (index, element) in input.characters.enumerated() {
@@ -173,11 +177,14 @@ class Scanner {
                     if(positionOfSlash == index-1) {
                         word.append(element)
                     } else {
-                        //word.append("\"")
+                        stringIsValid = true
                         break
                     }
                 }
             }
+        }
+        if(!stringIsValid) {
+            errorMsgs.append("Error: End of String is expected.")
         }
         return word
     }
@@ -230,6 +237,9 @@ class Scanner {
                 if(element != " " && element != "=" && element != "," && element != ";" && element != "(" && element != ")" && element != "[" && element != "]") {
                     errorMsgs.append("Error: Invalid identifier \(element)")
                 }
+                if(dotUsed == index-1) {
+                    errorMsgs.append("Error: '.' is not valid here.")
+                }
                 break
             }
         }
@@ -243,10 +253,14 @@ class Scanner {
         
         for (index, element) in input.characters.enumerated() {
             if(index<=1) {
-                if(element == "=") {
+                if(index == 0) {
                     word.append(element)
                 } else {
-                    break
+                    if(element == "=") {
+                        word.append(element)
+                    } else {
+                        break
+                    }
                 }
             } else {
                 break

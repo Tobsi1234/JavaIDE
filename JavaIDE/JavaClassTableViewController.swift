@@ -25,7 +25,7 @@ class JavaClassTableViewController: UITableViewController {
             fatalError("Unable to instantiate class1")
         }
         
-        guard let class2 = JavaClass(name: "Example 2", content: "public static void main(String[] args) {\n  int i = 5;\n  while(i == 5) {\n    String abc = \"Test\";\n    System.out.println(abc);\n  }\n}") else {
+        guard let class2 = JavaClass(name: "Example 2", content: "public static void main(String[] args) {\n  int i = 5;\n  if(i == 5 && 0 != 1) {\n    String abc = \"Test\";\n    System.out.println(abc);\n  }\n}") else {
             fatalError("Unable to instantiate class2")
         }
         
