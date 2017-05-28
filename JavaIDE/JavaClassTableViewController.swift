@@ -19,29 +19,60 @@ class JavaClassTableViewController: UITableViewController {
     
     //MARK: Private Methods
     
-    private func loadSampleClasses() {
+    private func loadClasses() {
         
-        guard let class1 = JavaClass(name: "Example 1", content: "public static void main(String[] args) {\n int i = 5;\n System.out.println(i);\n}") else {
-            fatalError("Unable to instantiate class1")
+        // Load any saved classes, otherwise load sample data and save them.
+        if let javaClasses = loadJavaClasses() {
+            for (_, value) in javaClasses {
+                classes.append(value)
+            }
+        } else {
+            guard let class1 = JavaClass(name: "Example 1", content: "public static void main(String[] args) {\n int i = 5;\n System.out.println(i);\n}") else {
+                fatalError("Unable to instantiate class1")
+            }
+            
+            guard let class2 = JavaClass(name: "Example 2", content: "public static void main(String[] args) {\n  int i = 5;\n  if(i == 5 && 0 != 1) {\n    String abc = \"Test\";\n    System.out.println(abc);\n  }\n}") else {
+                fatalError("Unable to instantiate class2")
+            }
+            
+            guard let class3 = JavaClass(name: "Example 3", content: "public static void main(String[] args) {\n int i = 5;\n System.out.println(i);\ntest1();\n}\n\npublic static void test1(String arg1, int arg2) {\n int j = 5;\n System.out.println(j);\n}") else {
+                fatalError("Unable to instantiate class3")
+            }
+            
+            guard let class4 = JavaClass(name: "Example 4", content: "public static void main(String[] args) {\n  int i = 0;\n  i = 1;\n  while(i < 5 && 0 == 0) {\n    i += 1;\n    System.out.println(i);\n  }\n}") else {
+                fatalError("Unable to instantiate class4")
+            }
+        
+            guard let class5 = JavaClass(name: "Example 5", content: "public static void main(String[] args) {\n  int i;\n  i = 1;\n  i += 1;\n  System.out.println(i);\n}") else {
+                fatalError("Unable to instantiate class4")
+            }
+        
+            classes += [class1, class2, class3, class4, class5]
+            
+            // save sample classes
+            var classesDict = [String: JavaClass]()
+            for javaClass in classes {
+                classesDict[javaClass.name] = javaClass
+            }
+            let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(classesDict, toFile: JavaClass.ArchiveURL.path)
+            if isSuccessfulSave {
+                os_log("Java Classes successfully saved.", log: OSLog.default, type: .debug)
+            } else {
+                os_log("Failed to save Java Classes...", log: OSLog.default, type: .error)
+            }
         }
-        
-        guard let class2 = JavaClass(name: "Example 2", content: "public static void main(String[] args) {\n  int i = 5;\n  if(i == 5 && 0 != 1) {\n    String abc = \"Test\";\n    System.out.println(abc);\n  }\n}") else {
-            fatalError("Unable to instantiate class2")
-        }
-        
-        guard let class3 = JavaClass(name: "Example 3", content: "public static void main(String[] args) {\n int i = 5;\n System.out.println(i);\ntest1();\n}\n\npublic static void test1(String arg1, int arg2) {\n int j = 5;\n System.out.println(j);\n}") else {
-            fatalError("Unable to instantiate class3")
-        }
-        
-        classes += [class1, class2, class3]
     }
     
+    // returns dictionary array of all saved classes
+    private func loadJavaClasses() -> [String: JavaClass]?  {
+        return NSKeyedUnarchiver.unarchiveObject(withFile: JavaClass.ArchiveURL.path) as? [String: JavaClass]
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Load the sample classes.
-        loadSampleClasses()
+        // Load classes
+        loadClasses()
     }
 
     override func didReceiveMemoryWarning() {
@@ -49,6 +80,7 @@ class JavaClassTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -116,16 +148,18 @@ class JavaClassTableViewController: UITableViewController {
 
     //MARK: Actions
     
+    // not used
     @IBAction func unwindToJavaClassList(sender: UIStoryboardSegue) {
         if let sourceViewController = sender.source as? EditorViewController, let javaClass = sourceViewController.javaClass {
             
             if let selectedIndexPath = tableView.indexPathForSelectedRow {
-                // Update an existing meal.
+                // Update an existing class.
+                
                 classes[selectedIndexPath.row] = javaClass
                 tableView.reloadRows(at: [selectedIndexPath], with: .none)
             }
             else { //notUsed
-                // Add a new meal.
+                // Add a new class.
                 let newIndexPath = IndexPath(row: classes.count, section: 0)
                 
                 classes.append(javaClass)
@@ -137,7 +171,7 @@ class JavaClassTableViewController: UITableViewController {
     
     //MARK: - Navigation
     
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    // preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         super.prepare(for: segue, sender: sender)
@@ -145,7 +179,7 @@ class JavaClassTableViewController: UITableViewController {
         switch(segue.identifier ?? "") {
             
         //case "AddItem":
-            //os_log("Adding a new meal.", log: OSLog.default, type: .debug)
+            //os_log("Adding a new class.", log: OSLog.default, type: .debug)
             
         case "ShowDetail":
             guard let javaClassDetailViewController = segue.destination as? EditorViewController else {
@@ -153,7 +187,7 @@ class JavaClassTableViewController: UITableViewController {
             }
             
             guard let selectedJavaClassCell = sender as? JavaClassTableViewCell else {
-                fatalError("Unexpected sender: \(sender)")
+                fatalError("Unexpected sender: \(String(describing: sender))")
             }
             
             guard let indexPath = tableView.indexPath(for: selectedJavaClassCell) else {
@@ -164,7 +198,7 @@ class JavaClassTableViewController: UITableViewController {
             javaClassDetailViewController.javaClass = selectedJavaClass
             
         default:
-            fatalError("Unexpected Segue Identifier; \(segue.identifier)")
+            fatalError("Unexpected Segue Identifier; \(String(describing: segue.identifier))")
         }
     }
 
