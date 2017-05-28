@@ -18,17 +18,31 @@ class Scanner {
     static var scanArray = [[String]]()
     
     static let javaDatatypes : [String] = ["String", "int", "double"]
-    static let javaLoopsOrConditions : [String] = ["for", "while", "if"] // ToDo: Switch
+    static let javaLoopsOrConditions : [String] = ["while", "if"] // ToDo: Switch, for
     static let javaScopes : [String] = ["private", "public", "protected"]
     
-    static func scanInput(_ input : String) -> [[String]] {
-        scanArray.removeAll()
-        var word = getNextWord(input)
-        var newInput = input
+    static var currentChar = 0
+    
+    /// [][0] : Position, [][1] : Length
+    static var errorInfos = [[Int]]()
         
-        while(newInput.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) != word && errorMsgs.isEmpty) { //wenn newInput (also Rest-String) == word dann ist word wohl das letzte.
+    static func scanInput(_ input : String) -> [[String]] {
+        currentChar = 0
+        errorInfos.removeAll()
+        scanArray.removeAll()
+        var oldInput = input // needed to count whitespaces/newlines for underlining errors
+        var newInput = trimLeadingWhitespaces(input)
+        currentChar += oldInput.characters.count - newInput.characters.count
+        oldInput = newInput
+        
+        var word = getNextWord(newInput)
+        
+        while(newInput.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) != word && errorMsgs.isEmpty) { //if newInput (rest of string) == word then the word is the last one.
             let index = newInput.index(newInput.startIndex, offsetBy: word.characters.count)
-            newInput = newInput.substring(from: index).trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+            oldInput = newInput.substring(from: index)
+            newInput = trimLeadingWhitespaces(oldInput)
+            currentChar += oldInput.characters.count - newInput.characters.count
+            oldInput = newInput
             word = getNextWord(newInput)
             //print(word)
         }
@@ -138,22 +152,20 @@ class Scanner {
                 } else {
                     type = "Error"
                     errorMsgs.append("Error: \(word) is not valid.")
+                    errorInfos += [[currentChar, word.characters.count]]
                 }
             default:
-                type = "Default"
-                for i in input.characters {
-                    if(i != " ") {
-                        word.append(i)
-                    } else {
-                        break
-                    }
-                }
+                type = "Error"
+                errorMsgs.append("Error: Invalid identifier \(inputCharacters[0])")
+                errorInfos += [[currentChar, 1]]
             }
             
             scanArray.append([type, word])
             if(type == "String") {
-                word = "\"" + word + "\"" // for ScanInput method, to compare word with rest input correctly. Problem: what if invalid string (when input ends like this: ..."_ without the second quotation mark
+                word = "\"" + word + "\"" // for ScanInput method, to compare word with rest input correctly.
             }
+            currentChar += word.characters.count
+            print("\(word): \(currentChar)")
         } else {
                 errorMsgs.append("Error: No input.")
             }
@@ -236,9 +248,11 @@ class Scanner {
             } else {
                 if(element != " " && element != "=" && element != "," && element != ";" && element != "(" && element != ")" && element != "[" && element != "]") {
                     errorMsgs.append("Error: Invalid identifier \(element)")
+                    errorInfos += [[currentChar+index, 1]]
                 }
                 if(dotUsed == index-1) {
                     errorMsgs.append("Error: '.' is not valid here.")
+                    errorInfos += [[currentChar+index],[1]]
                 }
                 break
             }
@@ -310,6 +324,21 @@ class Scanner {
         }
         
         return word
+    }
+    
+    
+    static func trimLeadingWhitespaces(_ input: String) -> String {
+        let newInput = input
+        var countedWS = 0
+        for element in input.characters {
+            if(element == " " || element == "\n") {
+                countedWS += 1
+            } else {
+                break
+            }
+        }
+        let index = newInput.index(newInput.startIndex, offsetBy: countedWS)
+        return newInput.substring(from: index)
     }
     
 }

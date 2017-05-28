@@ -8,7 +8,7 @@
 
 import Foundation
 
-
+// ToDo: Sum/Sub
 /// Possible types: Declaration, DeclarationAndAssignment, Assignment, Functioncall, FunctionHead, EndOfFunction, Print, Condition(?), Loop(?), (Class and Instantiation)
 class Parser {
     
@@ -293,7 +293,7 @@ class Parser {
             typeArray.append(input[0])
             index += 1
             if(input.indices.contains(1)) {
-                if(input[1][0] == "Assign") {
+                if(input[1][0] == "Assign" || input[1][0] == "PlusAssign") {
                     typeArray.append(input[1])
                     index += 1
                     if(input.indices.contains(2) && (input[2][0] == "Ident" || input[2][0] == "Number" || input[2][0] == "String")) {
@@ -348,7 +348,7 @@ class Parser {
                 typeArray.append(input[1])
                 index += 1
                 if(input.indices.contains(2)) {
-                    if(input[2][0] == "Ident") { // ToDo: More options possible
+                    if(input[2][0] == "Ident" || input[2][0] == "String" || input[2][0] == "Number") { // ToDo: More options possible
                         typeArray.append(input[2])
                         index += 1
                         if(input.indices.contains(3) && input[3][0] == "CloseBracket") {
@@ -365,10 +365,10 @@ class Parser {
                             Scanner.errorMsgs.append("Error: A close bracket is expected after \(input[2][1]).")
                         }
                     } else {
-                        Scanner.errorMsgs.append("Error: Missing Argument after open bracket.")
+                        Scanner.errorMsgs.append("Error: Missing Argument after open bracket in Print Statement.")
                     }
                 } else {
-                    Scanner.errorMsgs.append("Error: Missing Argument after open bracket.")
+                    Scanner.errorMsgs.append("Error: Missing Argument after open bracket in Print Statement.")
                 }
             } else {
                 Scanner.errorMsgs.append("Error: An open bracket is expected after System.out.println.")
