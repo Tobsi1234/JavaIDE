@@ -43,7 +43,7 @@ class ScannerTests: XCTestCase {
     
     func testPerformanceScanner() {
         self.measure {
-            let input = "i = 5; a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a"
+            let input = "public static void main(String[] args) {\n int i = 5;\n System.out.println(i);\ntest1();\n}\n\npublic static void test1(String arg1, int arg2) {\n int j = 5;\n System.out.println(j);\n}"
             _ = JavaIDE.Scanner.scanInput(input)
         }
     }
