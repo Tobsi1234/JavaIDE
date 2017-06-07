@@ -9,12 +9,14 @@
 import UIKit
 import os.log
 
-class EditorViewController: UIViewController, UITextViewDelegate {
+class EditorViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate {
     
     //MARK: Properties
     @IBOutlet weak var inputTextView: UITextView!
     @IBOutlet weak var resultTextView: UITextView!
-    var nameLabel = "" //notUsed
+    @IBOutlet weak var titleTextField: UITextField!
+    var oldTitle = ""
+
     
     /*
      This value is either passed by `JavaClassTableViewController` in `prepare(for:sender:)`
@@ -26,13 +28,14 @@ class EditorViewController: UIViewController, UITextViewDelegate {
         super.viewDidLoad()
         
         // Handle the text field’s user input through delegate callbacks.
-        inputTextView.delegate = self
+        self.inputTextView.delegate = self
+        self.titleTextField.delegate = self
         
         // Set up views if editing an existing JavaClass.
         if let javaClass = javaClass {
-            nameLabel = javaClass.name //notUsed
-            navigationItem.title = javaClass.name
+            titleTextField.text = javaClass.name
             inputTextView.text = javaClass.content
+            oldTitle = javaClass.name
         }
         
         //self.inputTextView.font = UIFont(name: (self.inputTextView.font?.fontName)!, size: 16)
@@ -57,8 +60,31 @@ class EditorViewController: UIViewController, UITextViewDelegate {
         view.endEditing(true)
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        print("Editor View did disappear.")
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.titleTextField.resignFirstResponder() // dismiss keyboard of titleTextField
+        // save new title if title changed
+        if(oldTitle != titleTextField.text && titleTextField.text != "") {
+            var classes = [String:JavaClass]()
+            
+            // Load any saved classes, delete old class, add the class with new name to the array and save it.
+            if let savedClasses = loadJavaClasses() {
+                classes = savedClasses
+            }
+
+            if let javaClass = classes[oldTitle] {
+                javaClass.name = titleTextField.text!
+                classes[titleTextField.text!] = javaClass
+                classes.removeValue(forKey: oldTitle)
+            }
+            
+            let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(classes, toFile: JavaClass.ArchiveURL.path)
+            if isSuccessfulSave {
+                os_log("Java Classes successfully saved.", log: OSLog.default, type: .debug)
+            } else {
+                os_log("Failed to save Java Classes...", log: OSLog.default, type: .error)
+            }
+        }
+        return false
     }
     
     func textViewDidChange(_ textView: UITextView) {
@@ -82,7 +108,7 @@ class EditorViewController: UIViewController, UITextViewDelegate {
             return
         }*/
         
-        let name = nameLabel
+        let name = "Name"
         let content = "Test"
         
         // Set the class to be passed to JavaClassTableViewController after the unwind segue.
@@ -108,7 +134,7 @@ class EditorViewController: UIViewController, UITextViewDelegate {
         
         print("\nErrors: \n")
         for msg in Scanner.errorMsgs {
-            print(msg)
+            print(msg) // for debugging
         }
         print("\nEnd of Errors \n")
         
@@ -129,6 +155,7 @@ class EditorViewController: UIViewController, UITextViewDelegate {
             }
         }
         
+        // error highlighting:
         if(Scanner.errorInfos.indices.contains(0)) {
             let attributedString:NSMutableAttributedString = NSMutableAttributedString(string: inputTextView.text)
             attributedString.addAttribute(NSUnderlineStyleAttributeName , value: NSUnderlineStyle.styleDouble.rawValue, range: NSRange(location: Scanner.errorInfos[0][0]-1, length: Scanner.errorInfos[0][1]+1))
@@ -146,12 +173,14 @@ class EditorViewController: UIViewController, UITextViewDelegate {
             
             resultTextView.attributedText = attributedOutput
             
-            javaClass?.name = navigationItem.title!
-            javaClass?.content = inputTextView.text
-            saveClasses(javaClass!)
+            let newJavaClass = JavaClass(name: titleTextField.text!, content: inputTextView.text)
+
+            if(newJavaClass != nil){
+                saveClasses(newJavaClass!)
+            }
         }
         
-        print(inputTextView.text.description)
+        print(inputTextView.text.description) // for debugging
 
     }
     

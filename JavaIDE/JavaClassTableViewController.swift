@@ -16,11 +16,13 @@ class JavaClassTableViewController: UITableViewController {
     
     var classes = [JavaClass]()
     
+    var javaClass: JavaClass?
+    
     
     //MARK: Private Methods
     
     private func loadClasses() {
-        
+        classes.removeAll()
         // Load any saved classes, otherwise load sample data and save them.
         if let javaClasses = loadJavaClasses() {
             for (_, value) in javaClasses {
@@ -63,21 +65,27 @@ class JavaClassTableViewController: UITableViewController {
         }
     }
     
-    // returns dictionary array of all saved classes
+    /// returns dictionary array of all saved classes
     private func loadJavaClasses() -> [String: JavaClass]?  {
         return NSKeyedUnarchiver.unarchiveObject(withFile: JavaClass.ArchiveURL.path) as? [String: JavaClass]
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         // Load classes
         loadClasses()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        print("TableView did appear.")
+        // reload classes after change
+        loadClasses()
+        self.tableView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
     
@@ -101,7 +109,7 @@ class JavaClassTableViewController: UITableViewController {
             fatalError("The dequeued cell is not an instance of JavaClassTableViewCell.")
         }
         
-        // Fetches the appropriate meal for the data source layout.
+        // Fetches the appropriate java class for the data source layout.
         let javaClass = classes[indexPath.row]
         
         cell.nameLabel.text = javaClass.name
@@ -111,43 +119,9 @@ class JavaClassTableViewController: UITableViewController {
     }
  
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
     //MARK: Actions
     
+    /*
     // not used
     @IBAction func unwindToJavaClassList(sender: UIStoryboardSegue) {
         if let sourceViewController = sender.source as? EditorViewController, let javaClass = sourceViewController.javaClass {
@@ -166,7 +140,8 @@ class JavaClassTableViewController: UITableViewController {
                 tableView.insertRows(at: [newIndexPath], with: .automatic)
             }
         }
-    }
+    } 
+    */
     
     
     //MARK: - Navigation
@@ -196,9 +171,17 @@ class JavaClassTableViewController: UITableViewController {
             
             let selectedJavaClass = classes[indexPath.row]
             javaClassDetailViewController.javaClass = selectedJavaClass
+         
+        case "AddItem":
+            guard let javaClassDetailViewController = segue.destination as? EditorViewController else {
+                fatalError("Unexpected destination: \(segue.destination)")
+            }
+  
+            let newJavaClass = JavaClass(name: "New Class", content: "public static void main(String[] args) {\n  System.out.println(\"Hello World\");\n}")
+            javaClassDetailViewController.javaClass = newJavaClass
             
         default:
-            fatalError("Unexpected Segue Identifier; \(String(describing: segue.identifier))")
+            print("Unexpected Segue Identifier; \(String(describing: segue.identifier))")
         }
     }
 

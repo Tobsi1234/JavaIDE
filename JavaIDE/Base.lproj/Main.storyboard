@@ -9,7 +9,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--New Class-->
+        <!--Test-->
         <scene sceneID="hNz-n2-bh7">
             <objects>
                 <viewController id="9pv-A4-QxB" customClass="EditorViewController" customModule="JavaIDE" customModuleProvider="target" sceneMemberID="viewController">
@@ -22,23 +22,23 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d2n-ya-XYo">
-                                <rect key="frame" x="18" y="422" width="47" height="35"/>
+                                <rect key="frame" x="15" y="451" width="123" height="41"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                <state key="normal" title="Run"/>
+                                <state key="normal" title="Save &amp; Run"/>
                                 <connections>
                                     <action selector="run:" destination="9pv-A4-QxB" eventType="touchUpInside" id="bvl-nG-R5d"/>
                                 </connections>
                             </button>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="doa-xC-eaI">
-                                <rect key="frame" x="14" y="72" width="343" height="342"/>
+                                <rect key="frame" x="14" y="72" width="343" height="375"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                             </textView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gHv-1s-QWk">
-                                <rect key="frame" x="14" y="468" width="343" height="142"/>
+                                <rect key="frame" x="14" y="496" width="343" height="142"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -48,10 +48,20 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Test" image="first" id="acW-dT-cKf"/>
-                    <navigationItem key="navigationItem" title="New Class" id="CM5-fW-tst"/>
+                    <navigationItem key="navigationItem" id="CM5-fW-tst">
+                        <nil key="title"/>
+                        <textField key="titleView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Title" textAlignment="natural" minimumFontSize="17" id="1LW-4m-84m">
+                            <rect key="frame" x="112.5" y="7" width="150" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <nil key="textColor"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                        </textField>
+                    </navigationItem>
                     <connections>
                         <outlet property="inputTextView" destination="doa-xC-eaI" id="Ipq-wg-pfY"/>
                         <outlet property="resultTextView" destination="gHv-1s-QWk" id="5fW-Q6-0Xj"/>
+                        <outlet property="titleTextField" destination="1LW-4m-84m" id="v7r-7D-Rug"/>
                         <segue destination="Jma-x6-sxx" kind="unwind" identifier="unwindToJavaClass" unwindAction="unwindToJavaClassListWithSender:" id="MFK-zV-UOL"/>
                     </connections>
                 </viewController>
@@ -101,7 +111,11 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Classes" id="9hm-4R-9cs">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="CJn-6V-kmw"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="CJn-6V-kmw">
+                            <connections>
+                                <segue destination="9pv-A4-QxB" kind="show" identifier="AddItem" id="cDQ-se-xQl"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dfW-5S-Dbw" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -229,4 +243,7 @@
         <image name="javaIcon" width="128" height="128"/>
         <image name="settingsIcon" width="22" height="22"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="cDQ-se-xQl"/>
+    </inferredMetricsTieBreakers>
 </document>
