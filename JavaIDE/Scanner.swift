@@ -8,13 +8,15 @@
 
 import Foundation
 
-/// Possible types: String, Number, Datatype, LoopOrCondition, Else, Scope, Static, Void, Print, Ident, OpenBracket, CloseBracket, OpenCurly, CloseCurly, OpenSquare, CloseSquare, Semicolon, Comma
-/// Assign, PlusAssign, Eq, Neq, Lt, Gt, Leq, Geq, Minus, Plus,  Multi, Div, And, Or, (Dot), (Default) Missing: Boolean (true, false), Switch, break
+/// Possible types: String, Number, Datatype, LoopOrCondition, Else, Scope, Static, Void, Print, Ident, OpenBracket, CloseBracket, OpenCurly, CloseCurly, OpenSquare, CloseSquare, Semicolon, Comma, Assign, PlusAssign, Eq, Neq, Lt, Gt, Leq, Geq, Minus, Plus, Multi, Div, And, Or Missing: Boolean, true, false, break
 class Scanner {
+    
+    //MARK: Properties
     
     static var errorMsgs = [String]()
     
-    /// [][0] : type, [][1] : value
+    /// Global Scan Array
+    /// Format: [][0] : type, [][1] : value
     static var scanArray = [[String]]()
     
     static let javaDatatypes : [String] = ["String", "int", "double"]
@@ -23,9 +25,13 @@ class Scanner {
     
     static var currentChar = 0
     
-    /// [][0] : Position, [][1] : Length
+    /// Array that provides information about errors (Scanner-Errors)
+    /// Format: [][0] : Position, [][1] : Length
     static var errorInfos = [[Int]]()
-        
+    
+    //MARK: Functions
+    
+    /// main scanner method, called by EditorViewController when Run button is pressed. Returns global scanArray which is filled in getNextWord with tokens.
     static func scanInput(_ input : String) -> [[String]] {
         currentChar = 0
         errorInfos.removeAll()
@@ -37,6 +43,7 @@ class Scanner {
         
         var word = getNextWord(newInput)
         
+        // deletes next token out of input Array and calls getNextWord method with new Array as long as Array is not empty,
         while(newInput.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) != word && errorMsgs.isEmpty) { //if newInput (rest of string) == word then the word is the last one.
             let index = newInput.index(newInput.startIndex, offsetBy: word.characters.count)
             oldInput = newInput.substring(from: index)
@@ -44,13 +51,12 @@ class Scanner {
             currentChar += oldInput.characters.count - newInput.characters.count
             oldInput = newInput
             word = getNextWord(newInput)
-            //print(word)
         }
         
         return scanArray
     }
     
-    
+    /// called by scanInput (main scanner method) and returns the next token of input.
     static func getNextWord(_ input : String) -> String {
         var type = ""
         var word = ""
@@ -167,27 +173,26 @@ class Scanner {
             currentChar += word.characters.count
             print("\(word): \(currentChar)")
         } else {
-                errorMsgs.append("Error: No input.")
-            }
+            errorMsgs.append("Error: No input.")
+        }
         return word
     }
     
-    
+    /// called by getNextWord method if next token seems to be a string. Returns the String.
     static func handleString (_ input : String) -> String {
         var word = ""
         var stringIsValid = false
-        //word.append("\"")
-        var positionOfSlash = -2 // dazu da, um \" zu erkennen. Problem bei \\" erkennt es ebenfalls \", obwohl hierbei das Backslash maskiert wird.
+        var positionOfSlash = -2 // position of backslash to detect masked quotation marks
         for (index, element) in input.characters.enumerated() {
             if(index != 0) {
                 if(element != "\"") {
-                    if(element == "\\") {
+                    if(element == "\\" && positionOfSlash != index-1) { // if last index also have a backslash it would be a masked backslash
                         positionOfSlash = index
                     }
                     word.append(element)
                 } else {
                     if(positionOfSlash == index-1) {
-                        word.append(element)
+                        word.append(element) // masked quotation marks
                     } else {
                         stringIsValid = true
                         break
@@ -201,7 +206,7 @@ class Scanner {
         return word
     }
     
-    
+    /// called by getNextWord method if next token seems to be a number or operator (+,-,.,0..9). Returns the token as String.
     static func handleNumberOrOperator (_ input : String) -> String {
         var word = ""
         var inputString = input
@@ -209,7 +214,7 @@ class Scanner {
         if(inputCharacters[0] == "+") {
             word.append(inputCharacters[0])
             inputString.remove(at: inputString.startIndex)
-            if(inputCharacters[1] == "=") { // now 0, before it was [1]!
+            if(inputCharacters[1] == "=") {
                 word.append(inputCharacters[1])
                 inputString.remove(at: inputString.startIndex)
                 return word
@@ -233,7 +238,7 @@ class Scanner {
         return word
     }
     
-    
+    /// called by getNextWord method if next token seems to be a word (variable, datatype, if, loop etc.). Returns the token as String.
     static func handleWord (_ input : String) -> String {
         var word = ""
         
@@ -261,7 +266,7 @@ class Scanner {
         return word
     }
     
-    
+    /// called by getNextWord method if next token seems to be a assign or compare operator (=,!=,==). Returns the token as String.
     static func handleAssignOrCompare(_ input : String) -> String {
         var word = ""
         
@@ -284,7 +289,7 @@ class Scanner {
         return word
     }
     
-    
+    /// called by getNextWord method if next token seems to be a assign or compare operator (=,!=,==). Returns the token as String.
     static func handleCompare(_ input : String) -> String {
         var word = ""
         
@@ -305,7 +310,7 @@ class Scanner {
         return word
     }
 
-    
+    /// called by getNextWord method if next token seems to be a And or Or (&&,||). Returns the token as String.
     static func handleAndOr(_ input : String) -> String {
         var word = ""
         
@@ -326,7 +331,7 @@ class Scanner {
         return word
     }
     
-    
+    /// called by scanInput (main scanner method) and returns the input String without leading whitespaces
     static func trimLeadingWhitespaces(_ input: String) -> String {
         let newInput = input
         var countedWS = 0

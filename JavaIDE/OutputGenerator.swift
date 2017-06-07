@@ -11,12 +11,24 @@ import Foundation
 // Number: Check if number is integer or float... (remember: ".5" or "123." is float)
 class OutputGenerator {
     
-    static var varArray = [[[String: Any]]]() // dimensions: function, scope, variable
-    static var functionsArray = [String]()
-    static var currentScope = 0 // ToDo
-    static var currentFunction = 0 // die beiden variablen sind wichtig für scopes: [currentFunction][currentScope][varName: varValue]
+    //MARK: Properties
+    
+    /// global variable array
+    /// Format: [function][scope][variable]
+    static var varArray = [[[String: Any]]]()
+    
+    /// global output array (filled by handlePrint)
     static var outputMsgs = [String]()
     
+    static var functionsArray = [String]()
+    static var currentScope = 0 // ToDo
+    static var currentFunction = 0 // used in varArray: [currentFunction][currentScope][varName: varValue]
+    
+    
+    //MARK: Functions
+    
+    /// main generator method, called by EditorViewController when Run button is pressed after Parsing. 
+    /// Output is not returned but saved in the public outputMsgs array.
     static func generateOutput(_ parseArray: [[[[String]]]]) {
         varArray.removeAll()
         functionsArray.removeAll()
@@ -64,7 +76,7 @@ class OutputGenerator {
         }
     }
     
-    // handles declaration like "String abc;"
+    /// handles declaration like "String abc;"
     static func handleDeclaration(_ parseArray: [[String]]) {
         let ident : String = parseArray[2][1]
         var isIn = false
@@ -87,7 +99,7 @@ class OutputGenerator {
         }
     }
     
-    // handles declaration with assignment like "int i = 5;"
+    /// handles declaration with assignment like "int i = 5;"
     static func handleDeclarationAndAssignment(_ parseArray: [[String]]) {
         let ident : String = parseArray[2][1]
         let assignment : String = parseArray[4][1]
@@ -131,7 +143,7 @@ class OutputGenerator {
         }
     }
     
-    // handles assignment of variables like "i = 5;"
+    /// handles assignment of variables like "i = 5;"
     static func handleAssignment(_ parseArray: [[String]]) {
         let ident : String = parseArray[1][1]
         let assignment : String = parseArray[3][1] // ToDo: Should be Any because it also could be just a number --> check if it's convertible to Int, if not leave it as string... then if it's a string, it could be a ident
@@ -216,9 +228,8 @@ class OutputGenerator {
         }
     }
     
-    
+    /// handles print statement
     static func handlePrint (_ parseArray: [[String]]) {
-        
         var printValue = "" // ToDo: Datatype Any?
         if(parseArray[3][0] == "Ident") { // Print Variable
             let printIdent : String = parseArray[3][1] // ToDo: Print anything not just idents
@@ -244,7 +255,7 @@ class OutputGenerator {
         print("Ergebnis: \(printValue)")
     }
     
-    
+    /// handles functioncall
     static func handleFunctioncall (_ parseArray: [[[[String]]]], functionName: String) {
         // currentFunction wechseln, ansonsten wie oben (generateOutput)
         if(functionName.lowercased() == "main") {
@@ -290,7 +301,7 @@ class OutputGenerator {
     }
     
     
-    // ToDo: Only 1 (cond1) or 2 conditions (cond1 && or || cond2) possible right now
+    /// handles if clause or loop
     static func handleLoopOrCondition(_ parseArray: [[String]]) {
         var newParseArray = parseArray
         
@@ -305,6 +316,7 @@ class OutputGenerator {
         }
         
         // check if more than 1 condition (eq, neq...) and if yes get them, too.
+        // ToDo: Only 1 (cond1) or 2 conditions (cond1 && or || cond2) possible right now
         if(newParseArray.indices.contains(0) && newParseArray[0][0] != "CloseBracket") {
             conjunction.append(newParseArray[0][0])
             args.append(newParseArray[1])
@@ -435,7 +447,7 @@ class OutputGenerator {
                             bool = true
                         }
                     }
-                    if(Scanner.errorMsgs.isEmpty && bool && countLoops < 10) {
+                    if(Scanner.errorMsgs.isEmpty && bool && countLoops < 101) {
                         handleInnerLoopOrCondition(newParseArray)
                     } else {
                         break
@@ -446,7 +458,7 @@ class OutputGenerator {
     }
     
     
-    // handles different conditions in LoopOrCondition. Returns true if condition is true.
+    /// handles different conditions in LoopOrCondition. Returns true if condition is true.
     static func handleCondition(op: String, argValue1: Any, argValue2: Any) -> Bool {
         var bool = false
         
@@ -496,7 +508,7 @@ class OutputGenerator {
     }
     
     
-    // Called by LoopOrCondition if condition is true. Handles actions defined in curly brackets.
+    /// Called by LoopOrCondition if condition is true. Handles actions defined in curly brackets.
     static func handleInnerLoopOrCondition(_ parseArray: [[String]]) {
         //ToDo: currentScope += 1
         var newParseArray = parseArray
@@ -534,7 +546,7 @@ class OutputGenerator {
 
 }
 
-
+/// Used in varArray. NoValue is given if variable is declared but no value is assigned (handleDeclaration).
 class NoValue {
     var name = ""
     var datatype = ""

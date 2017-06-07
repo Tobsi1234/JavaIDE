@@ -8,14 +8,21 @@
 
 import Foundation
 
-// ToDo: Sum/Sub
-/// Possible types: Declaration, DeclarationAndAssignment, Assignment, Functioncall, FunctionHead, EndOfFunction, Print, Condition(?), Loop(?), (Class and Instantiation)
+// ToDo: Sum/Sub, Class, Instanziation
+/// Possible types: Declaration, DeclarationAndAssignment, Assignment, Functioncall, FunctionHead, EndOfFunction, Print, Condition(?), Loop(?),
 class Parser {
     
-    static var parseArray = [[[[String]]]]() // global array
-    static var functionParseArray = [[[String]]]() // function array, part of global array
+    //MARK: Properties
+    
+    /// global parse array [function][codetype][token][tokentype/-value]
+    static var parseArray = [[[[String]]]]()
+    /// function array, part of global array [codetype][token][tokentype/-value]
+    static var functionParseArray = [[[String]]]()
     static var index = 0
     
+    //MARK: Functions
+    
+    /// main parse method, called by EditorViewController when Run button is pressed after Scanning. Returns global parseArray which is filled in handleFunction with functions.
     static func parseInput(_ scanArray : [[String]]) -> [[[[String]]]] {
         parseArray.removeAll()
         functionParseArray.removeAll()
@@ -30,9 +37,7 @@ class Parser {
         return parseArray
     }
     
-    
-    // ToDo: Save functionnames with arguments in extra object/array for OutputGenerator
-    
+    /// called by parseInput (main parse method) to parse next function and returns input (scanArray) without parsed function
     static func handleFunction(_ input : [[String]]) -> [[String]] {
         functionParseArray.removeAll()
         index = 0
@@ -51,6 +56,7 @@ class Parser {
                     if(input.indices.contains(3) && input[3][0] == "Ident") {
                         typeArray.append(input[3])
                         index += 1
+                        // parse main method (specific arguments: String[] args)
                         if(input[3][1] == "main"){
                             if(input.indices.contains(4) && input[4][0] == "OpenBracket") {
                                 typeArray.append(input[4])
@@ -71,6 +77,7 @@ class Parser {
                                                     typeArray.append(input[9])
                                                     index += 1
                                                     if(input.indices.contains(10) && input[10][0] == "OpenCurly") {
+                                                        // parse function body of main method
                                                         typeArray.append(input[10])
                                                         index += 1
                                                         typeArray[0] = ["FunctionHead"]
@@ -119,10 +126,11 @@ class Parser {
                                 Scanner.errorMsgs.append("Error: A open bracket is expected after the method name of \(input[3][1]) - method.")
                             }
                         } else {
-                            // ToDo: wie oben aber ohne "String[] args" . Argument in extra Methode parsen, z.B.: (String i, int j).. mit index array weiterzählen also input[index][0] anstatt input[42][0]
+                            // parse not main method
                             if(input.indices.contains(4) && input[4][0] == "OpenBracket") {
                                 typeArray.append(input[4])
                                 index += 1
+                                // parse function arguments
                                 while(input.indices.contains(index) && input[index][0] != "CloseBracket" && Scanner.errorMsgs.isEmpty) {
                                     if(input.indices.contains(index) && input[index][0] == "Datatype") {
                                         typeArray.append(input[index])
@@ -149,6 +157,7 @@ class Parser {
                                     typeArray.append(input[index])
                                     index += 1
                                     if(input.indices.contains(index) && input[index][0] == "OpenCurly") {
+                                        // parse function body of not main method
                                         typeArray.append(input[index])
                                         index += 1
                                         typeArray[0] = ["FunctionHead"]
@@ -184,7 +193,7 @@ class Parser {
                             } else {
                                 Scanner.errorMsgs.append("Error: A open bracket is expected after the function name of \(input[3][1]) - method.")
                             }
-                        } // end of else
+                        } // end of main-else
                     } else {
                         Scanner.errorMsgs.append("Error: A method name is expected after \(input[2][1]).")
                     }
@@ -197,14 +206,12 @@ class Parser {
         } else {
             Scanner.errorMsgs.append("Error: A Scope is expected.") // Should not happen.
         }
-    
         return newScanArray
     }
     
     
-    /// get Type of a sequence, like declaration, functioncall etc. 
-    /// types: Declaration, Assignment, DeclarationAssignment, Assignment, Functioncall, Printstatement, Function, Loop, Condition
-    /// newParseArray is the parseArray without the first type (functioncall etc.)
+    /// get Type of a sequence like declaration, functioncall etc. and call the handler functions (called by handleFunction)
+    /// returns input (scanArray) without parsed sequence (functioncall etc.)
     static func handleFunctionBody(_ input : [[String]]) -> [[String]] {
         index = 0
         var newScanArray = input
@@ -238,7 +245,7 @@ class Parser {
         return newScanArray
     }
     
-    
+    /// called by handleFunctionBody if next sequence seems to be a declaration. Returns the sequence of token as String array.
     static func handleDeclaration(_ input : [[String]]) -> [[String]] {
         index = 0
         var typeArray = [[String]]()
@@ -284,7 +291,7 @@ class Parser {
         return typeArray
     }
 
-    
+    /// called by handleFunctionBody if next sequence seems to be a assignment or functioncall. Returns the sequence of token as String array.
     static func handleAssignOrFunctioncall(_ input : [[String]]) -> [[String]] {
         index = 0
         var typeArray = [[String]]()
@@ -337,6 +344,7 @@ class Parser {
     }
     
     
+    /// called by handleFunctionBody if next sequence seems to be a print statement. Returns the sequence of token as String array.
     static func handlePrint (_ input : [[String]]) -> [[String]] {
         index = 0
         var typeArray = [[String]]()
@@ -378,10 +386,7 @@ class Parser {
         return typeArray
     }
     
-    
-    // Beachte das zwischen CurlyKlammern wieder types stehen. Daher Rekursion/Schleife. In Array z.B.: ...,["OpenCurly", "{"], ["DeclarationAndAssignment"], ["Datatype", "String"],...
-    // ToDo: handle InnerLoopOrCondition
-    // ToDo: ELSE
+    /// called by handleFunctionBody if next sequence seems to be an if clause or loop. Returns the sequence of token as String array.
     static func handleLoopOrCondition(_ input : [[String]]) -> [[String]] {
         index = 0
         var newIndex = 0
@@ -503,6 +508,8 @@ class Parser {
         return typeArray
     }
     
+    
+    /// called by handleLoopOrCondition if next sequence seems to be again an if clause or loop. Returns the sequence of token as String array.
     static func handleInnerLoopOrCondition(_ input : [[String]]) -> [[String]] {
         var newInput = input
         var typeArray = [[String]]()
